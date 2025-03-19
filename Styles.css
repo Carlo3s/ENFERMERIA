@@ -184,3 +184,57 @@ button:hover {
     border-left: 5px solid #28a745;
     border-radius: 5px;
 }
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+
+    /* Contenedor principal */
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    /* Estilo para las imágenes responsivas */
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* Estilos para pantallas grandes */
+    @media (min-width: 1024px) {
+      body {
+        font-size: 18px;
+      }
+      .container {
+        max-width: 960px;
+      }
+    }
+
+    /* Estilos para pantallas medianas (tablets) */
+    @media (max-width: 1024px) and (min-width: 768px) {
+      body {
+        font-size: 16px;
+      }
+      .container {
+        max-width: 800px;
+      }
+    }
+
+    /* Estilos para pantallas pequeñas (móviles) */
+    @media (max-width: 768px) {
+      body {
+        font-size: 14px;
+      }
+      .container {
+        max-width: 100%;
+        padding: 10px;
+      }
+    }
+
+
