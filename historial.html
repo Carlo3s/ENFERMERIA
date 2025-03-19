@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial de Valoraciones</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav> 
+        <div class="logo">
+           
+        <a href="index.html"><img src="logo.png" alt="Logo" id="logo"></a>
+    </div>
+        <ul>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="historial.html">Historial</a></li>
+            <li><a href="acerca.html">Acerca de</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+    </nav>
+    
+    <div class="container">
+        <h2>Historial de Valoraciones</h2>
+        <ul id="listaHistorial"></ul>
+    </div>
+    
+    <script>
+        window.onload = function() {
+            let historial = JSON.parse(localStorage.getItem('historial')) || [];
+            let listaHistorial = document.getElementById('listaHistorial');
+
+            if (historial.length > 0) {
+                historial.forEach(valoracion => {
+                    let listItem = document.createElement('li');
+                    listItem.innerHTML = `
+                        <p><strong>Nombre:</strong> ${valoracion.nombre}</p>
+                        <p><strong>Edad:</strong> ${valoracion.edad} años</p>
+                        <p><strong>Peso:</strong> ${valoracion.peso} kg</p>
+                        <p><strong>Altura:</strong> ${valoracion.altura} m</p>
+                        <p><strong>IMC:</strong> ${valoracion.imc} (${valoracion.imcClasificacion})</p>
+                        <p><strong>Presión Arterial Media:</strong> ${valoracion.pam}</p>
+                        <p><strong>Estado Neurológico:</strong> ${valoracion.neurologico}</p>
+                        <p><strong>Saturación de Oxígeno:</strong> ${valoracion.respiratorio}%</p>
+                        <p><strong>Movilidad:</strong> ${valoracion.musculo}</p>
+                        <p><strong>Estado de la piel:</strong> ${valoracion.piel}</p>
+                    `;
+                    listaHistorial.appendChild(listItem);
+                });
+            } else {
+                listaHistorial.innerHTML = "<p>No hay valoraciones registradas.</p>";
+            }
+        };
+    </script>
+</body>
+</html>

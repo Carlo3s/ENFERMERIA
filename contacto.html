@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/emailjs-com@2.6.4/dist/email.min.js"></script>
+</head>
+<body>
+    <nav>
+        <div class="logo">
+           
+            <a href="index.html"><img src="logo.png" alt="Logo" id="logo"></a>
+        </div>
+        <ul>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="historial.html">Historial</a></li>
+            <li><a href="acerca.html">Acerca de</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+    </nav>
+    
+    <form id="contactForm">
+        <label>Nombre:</label>
+        <input type="text" name="nombre" placeholder="Ingrese su nombre" required>
+    
+        <label>Email:</label>
+        <input type="email" name="email" placeholder="Ingrese su email" required>
+    
+        <label>Mensaje:</label>
+        <textarea name="mensaje" placeholder="Escriba su mensaje" required></textarea>
+    
+        <button type="submit">Enviar</button>
+    </form>
+    
+    <p id="mensajeExito" style="color: green; display: none;">¡Mensaje enviado con éxito!</p>
+    </div>
+</body>
+</html>
