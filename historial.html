@@ -6,10 +6,14 @@
     <title>Historial de Valoraciones</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+<script src="historial.js"></script>
 <body onload="mostrarHistorial()">
-    <nav>
+    <div id="historial"></div>
+</body>
+<body>
+    <nav> 
         <div class="logo">
-            <a href="index.html"><img src="logo.png" alt="Logo"></a>
+            <a href="index.html"><img src="logo.png" alt="Logo" id="logo"></a>
         </div>
         <ul>
             <li><a href="index.html">Inicio</a></li>
@@ -18,33 +22,82 @@
             <li><a href="contacto.html">Contacto</a></li>
         </ul>
     </nav>
-
+    
     <div class="container">
         <h2>Historial de Valoraciones</h2>
-        <div id="historial"></div>
+        <ul id="listaHistorial"></ul>
+        <button onclick="limpiarHistorial()">🗑️ Borrar Historial</button>
     </div>
-
+    
     <script>
-        function mostrarHistorial() {
-            let historial = JSON.parse(localStorage.getItem('historial')) || [];
-            let historialDiv = document.getElementById('historial');
+        window.onload = function() {
+            let usuario = localStorage.getItem('usuarioActual') || 'defaultUser';
+            let historial = JSON.parse(localStorage.getItem(`historial_${usuario}`)) || [];
+            let listaHistorial = document.getElementById('listaHistorial');
 
-            if (historial.length === 0) {
-                historialDiv.innerHTML = "<p>No hay registros en el historial.</p>";
-                return;
+            if (historial.length > 0) {
+                historial.forEach((valoracion, index) => {
+                    let imcData = clasificarIMC(valoracion.imc);
+                    let listItem = document.createElement('li');
+                    listItem.innerHTML = `
+                        <p><strong>${index + 1}. ${valoracion.nombre}</strong></p>
+                        <p><strong>Edad:</strong> ${valoracion.edad} años</p>
+                        <p><strong>Peso:</strong> ${valoracion.peso} kg</p>
+                        <p><strong>Altura:</strong> ${valoracion.altura} m</p>
+                        <p style="color:${imcData.color};"><strong>IMC:</strong> ${valoracion.imc} (${imcData.emoji} ${imcData.clasificacion})</p>
+                        <p><strong>Presión Arterial Media:</strong> ${valoracion.pam}</p>
+                        <p><strong>Estado Neurológico:</strong> ${valoracion.neurologico}</p>
+                        <p><strong>Saturación de Oxígeno:</strong> ${valoracion.respiratorio}%</p>
+                        <p><strong>Movilidad:</strong> ${valoracion.musculo}</p>
+                        <p><strong>Estado de la piel:</strong> ${valoracion.piel}</p>
+                    `;
+                    listaHistorial.appendChild(listItem);
+                });
+            } else {
+                listaHistorial.innerHTML = "<p>No hay valoraciones registradas.</p>";
             }
+        };
 
-            historialDiv.innerHTML = historial.map((item, index) => `
-                <div class="historial-item">
-                    <p><strong>Registro #${index + 1}</strong></p>
-                    <p><strong>Nombre:</strong> ${item.nombre}</p>
-                    <p><strong>Edad:</strong> ${item.edad} años</p>
-                    <p><strong>IMC:</strong> ${item.imc} (${item.imcClasificacion})</p>
-                    <p><strong>PAM:</strong> ${item.pam}</p>
-                    <hr>
-                </div>
-            `).join('');
+        function clasificarIMC(imc) {
+            if (imc < 18.5) return { clasificacion: "Bajo peso", color: "blue", emoji: "🔵" };
+            if (imc < 24.9) return { clasificacion: "Peso saludable", color: "green", emoji: "🟢" };
+            if (imc < 29.9) return { clasificacion: "Sobrepeso", color: "orange", emoji: "🟠" };
+            if (imc < 34.9) return { clasificacion: "Obesidad I", color: "red", emoji: "🔴" };
+            if (imc < 39.9) return { clasificacion: "Obesidad II", color: "purple", emoji: "🟣" };
+            return { clasificacion: "Obesidad III", color: "darkviolet", emoji: "🟪" };
         }
+        function mostrarHistorial() {
+    let historial = JSON.parse(localStorage.getItem('historial')) || [];
+    let historialContainer = document.getElementById('historial-container');
+
+    historialContainer.innerHTML = ""; // Limpiar contenido previo
+
+    if (historial.length === 0) {
+        historialContainer.innerHTML = "<p>No hay registros en el historial.</p>";
+        return;
+    }
+
+    historial.forEach((item, index) => {
+        let div = document.createElement('div');
+        div.classList.add('historial-item');
+
+        div.innerHTML = `
+            <p><strong>Nombre:</strong> ${item.nombre}</p>
+            <p><strong>Edad:</strong> ${item.edad} años</p>
+            <p><strong>Peso:</strong> ${item.peso} kg</p>
+            <p><strong>Altura:</strong> ${item.altura} m</p>
+            <p style="color:${item.imcColor};"><strong>IMC:</strong> ${item.imc} ${item.imcEmoji} (${item.imcClasificacion})</p>
+            <p><strong>Presión Arterial Media:</strong> ${item.pam}</p>
+            <hr>
+        `;
+
+        historialContainer.appendChild(div);
+    });
+}
+
+// Ejecutar la función al cargar la página
+document.addEventListener("DOMContentLoaded", mostrarHistorial);
+
     </script>
 </body>
 </html>
