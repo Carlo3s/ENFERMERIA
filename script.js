@@ -58,10 +58,16 @@ function calcularValores() {
         piel: document.getElementById('piel').value
     };
 
+    // Obtener historial del localStorage
     let historial = JSON.parse(localStorage.getItem('historial')) || [];
+
+    // Agregar nueva valoración al historial
     historial.push(valoracion);
+
+    // Guardar nuevamente en localStorage
     localStorage.setItem('historial', JSON.stringify(historial));
 
+    // Mostrar resultado en la página
     document.getElementById('resultado').innerHTML = `
         <p><strong>Nombre:</strong> ${nombre}</p>
         <p><strong>Edad:</strong> ${edad} años</p>
@@ -71,5 +77,5 @@ function calcularValores() {
         <p><strong>Presión Arterial Media:</strong> ${pam.toFixed(2)}</p>
     `;
 
-    console.log("Historial actualizado:", historial);
+    console.log("Historial guardado en localStorage:", historial);
 }
