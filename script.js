@@ -89,4 +89,20 @@ document.addEventListener("DOMContentLoaded", function() {
                 });
         });
    
-    
+    // Función para limpiar el historial de valoraciones
+function limpiarHistorial() {
+    if (confirm("¿Estás seguro de que deseas borrar todo el historial?")) {
+        localStorage.removeItem("historial");
+        actualizarHistorial(); // Refrescar la lista
+        alert("Historial borrado correctamente.");
+    }
+}
+
+// Agregar botón de limpieza en la página
+document.addEventListener("DOMContentLoaded", function() {
+    let botonLimpiar = document.createElement("button");
+    botonLimpiar.textContent = "Limpiar Historial";
+    botonLimpiar.style.marginTop = "10px";
+    botonLimpiar.onclick = limpiarHistorial;
+    document.getElementById("historial").appendChild(botonLimpiar);
+});
