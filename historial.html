@@ -11,9 +11,8 @@
 <body>
     <nav> 
         <div class="logo">
-           
-        <a href="index.html"><img src="logo.png" alt="Logo" id="logo"></a>
-    </div>
+            <a href="index.html"><img src="logo.png" alt="Logo" id="logo"></a>
+        </div>
         <ul>
             <li><a href="index.html">Inicio</a></li>
             <li><a href="historial.html">Historial</a></li>
@@ -25,25 +24,25 @@
     <div class="container">
         <h2>Historial de Valoraciones</h2>
         <ul id="listaHistorial"></ul>
-        <h3>Historial de Valoraciones</h3>
-<ul id="listaHistorial"></ul>
-<button onclick="limpiarHistorial()">🗑️ Borrar Historial</button>
+        <button onclick="limpiarHistorial()">🗑️ Borrar Historial</button>
     </div>
     
     <script>
         window.onload = function() {
-            let historial = JSON.parse(localStorage.getItem('historial')) || [];
+            let usuario = localStorage.getItem('usuarioActual') || 'defaultUser';
+            let historial = JSON.parse(localStorage.getItem(`historial_${usuario}`)) || [];
             let listaHistorial = document.getElementById('listaHistorial');
 
             if (historial.length > 0) {
-                historial.forEach(valoracion => {
+                historial.forEach((valoracion, index) => {
+                    let imcData = clasificarIMC(valoracion.imc);
                     let listItem = document.createElement('li');
                     listItem.innerHTML = `
-                        <p><strong>Nombre:</strong> ${valoracion.nombre}</p>
+                        <p><strong>${index + 1}. ${valoracion.nombre}</strong></p>
                         <p><strong>Edad:</strong> ${valoracion.edad} años</p>
                         <p><strong>Peso:</strong> ${valoracion.peso} kg</p>
                         <p><strong>Altura:</strong> ${valoracion.altura} m</p>
-                        <p><strong>IMC:</strong> ${valoracion.imc} (${valoracion.imcClasificacion})</p>
+                        <p style="color:${imcData.color};"><strong>IMC:</strong> ${valoracion.imc} (${imcData.emoji} ${imcData.clasificacion})</p>
                         <p><strong>Presión Arterial Media:</strong> ${valoracion.pam}</p>
                         <p><strong>Estado Neurológico:</strong> ${valoracion.neurologico}</p>
                         <p><strong>Saturación de Oxígeno:</strong> ${valoracion.respiratorio}%</p>
@@ -52,12 +51,19 @@
                     `;
                     listaHistorial.appendChild(listItem);
                 });
-                
             } else {
                 listaHistorial.innerHTML = "<p>No hay valoraciones registradas.</p>";
             }
         };
-        
+
+        function clasificarIMC(imc) {
+            if (imc < 18.5) return { clasificacion: "Bajo peso", color: "blue", emoji: "🔵" };
+            if (imc < 24.9) return { clasificacion: "Peso saludable", color: "green", emoji: "🟢" };
+            if (imc < 29.9) return { clasificacion: "Sobrepeso", color: "orange", emoji: "🟠" };
+            if (imc < 34.9) return { clasificacion: "Obesidad I", color: "red", emoji: "🔴" };
+            if (imc < 39.9) return { clasificacion: "Obesidad II", color: "purple", emoji: "🟣" };
+            return { clasificacion: "Obesidad III", color: "darkviolet", emoji: "🟪" };
+        }
     </script>
 </body>
 </html>
