@@ -89,31 +89,4 @@ document.addEventListener("DOMContentLoaded", function() {
                 });
         });
    
-   // Función para limpiar el historial de valoraciones
-function limpiarHistorial() {
-    if (confirm("¿Estás seguro de que deseas borrar todo el historial?")) {
-        localStorage.removeItem("historial"); // Elimina del almacenamiento local
-        actualizarHistorial(); // Refrescar la lista de historial
-        document.getElementById("listaHistorial").innerHTML = ""; // Limpia la UI
-        alert("Historial borrado correctamente.");
-    }
-}
-
-// Función para cargar y mostrar el historial
-function actualizarHistorial() {
-    let historial = JSON.parse(localStorage.getItem("historial")) || [];
-    let lista = document.getElementById("listaHistorial");
-
-    lista.innerHTML = ""; // Limpiar antes de volver a mostrar
-
-    historial.forEach((valoracion, index) => {
-        let item = document.createElement("li");
-        item.textContent = `${index + 1}. ${valoracion.nombre} - IMC: ${valoracion.imc} (${valoracion.imcClasificacion})`;
-        lista.appendChild(item);
-    });
-}
-
-// Cargar historial cuando la página cargue
-document.addEventListener("DOMContentLoaded", function () {
-    actualizarHistorial();
-});
+    
