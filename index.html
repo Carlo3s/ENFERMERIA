@@ -13,7 +13,6 @@
 <body>
     <nav>
         <div class="logo">
-           
             <a href="index.html"><img src="logo.png" alt="Logo" id="logo"></a>
         </div>
         <ul>
@@ -89,19 +88,42 @@
             let pam = ((2 * pd) + ps) / 3;
             
             let imcClasificacion = "";
-            if (imc < 18.5) imcClasificacion = "Bajo peso";
-            else if (imc < 24.9) imcClasificacion = "Peso normal";
-            else if (imc < 29.9) imcClasificacion = "Sobrepeso";
-            else imcClasificacion = "Obesidad";
+            let imcColor = "";
+            let imcEmoji = "";
             
-            // Crear el objeto con los datos de la valoración
+            if (imc < 18.5) {
+                imcClasificacion = "Por debajo del peso normal";
+                imcColor = "blue";
+                imcEmoji = "🔵";
+            } else if (imc < 24.9) {
+                imcClasificacion = "Peso saludable";
+                imcColor = "green";
+                imcEmoji = "🟢";
+            } else if (imc < 29.9) {
+                imcClasificacion = "Sobrepeso";
+                imcColor = "orange";
+                imcEmoji = "🟠";
+            } else if (imc < 34.9) {
+                imcClasificacion = "Obesidad I";
+                imcColor = "red";
+                imcEmoji = "🔴";
+            } else if (imc < 39.9) {
+                imcClasificacion = "Obesidad II";
+                imcColor = "purple";
+                imcEmoji = "🟣";
+            } else {
+                imcClasificacion = "Obesidad III";
+                imcColor = "darkviolet";
+                imcEmoji = "🟪";
+            }
+            
             let valoracion = {
-                nombre: nombre,
-                edad: edad,
-                peso: peso,
-                altura: altura,
-                imc: imc,
-                imcClasificacion: imcClasificacion,
+                nombre,
+                edad,
+                peso,
+                altura,
+                imc,
+                imcClasificacion,
                 pam: pam.toFixed(2),
                 neurologico: document.getElementById('neurologico').value,
                 respiratorio: document.getElementById('respiratorio').value,
@@ -109,23 +131,18 @@
                 piel: document.getElementById('piel').value
             };
             
-            // Guardar los datos en localStorage
             let historial = JSON.parse(localStorage.getItem('historial')) || [];
             historial.push(valoracion);
             localStorage.setItem('historial', JSON.stringify(historial));
-
-            // Mostrar los resultados en la misma página
-            document.getElementById('resultado').innerHTML = 
-                `<p><strong>Nombre:</strong> ${nombre}</p>
-                 <p><strong>Edad:</strong> ${edad} años</p>
-                 <p><strong>Peso:</strong> ${peso} kg</p>
-                 <p><strong>Altura:</strong> ${altura} m</p>
-                 <p><strong>IMC:</strong> ${imc} (${imcClasificacion})</p>
-                 <p><strong>Presión Arterial Media:</strong> ${pam.toFixed(2)}</p>
-                 <p><strong>Estado Neurológico:</strong> ${document.getElementById('neurologico').value}</p>
-                 <p><strong>Saturación de Oxígeno:</strong> ${document.getElementById('respiratorio').value}%</p>
-                 <p><strong>Movilidad:</strong> ${document.getElementById('musculo').value}</p>
-                 <p><strong>Estado de la piel:</strong> ${document.getElementById('piel').value}</p>`;
+            
+            document.getElementById('resultado').innerHTML = `
+                <p><strong>Nombre:</strong> ${nombre}</p>
+                <p><strong>Edad:</strong> ${edad} años</p>
+                <p><strong>Peso:</strong> ${peso} kg</p>
+                <p><strong>Altura:</strong> ${altura} m</p>
+                <p style="color:${imcColor};"><strong>IMC:</strong> ${imc} ${imcEmoji} (${imcClasificacion})</p>
+                <p><strong>Presión Arterial Media:</strong> ${pam.toFixed(2)}</p>
+            `;
         }
     </script>
 </body>
