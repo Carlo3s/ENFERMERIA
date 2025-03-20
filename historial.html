@@ -7,7 +7,9 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <script src="historial.js"></script>
-
+<body onload="mostrarHistorial()">
+    <div id="historial"></div>
+</body>
 <body>
     <nav> 
         <div class="logo">
@@ -64,6 +66,26 @@
             if (imc < 39.9) return { clasificacion: "Obesidad II", color: "purple", emoji: "🟣" };
             return { clasificacion: "Obesidad III", color: "darkviolet", emoji: "🟪" };
         }
+        function mostrarHistorial() {
+    let historial = JSON.parse(localStorage.getItem('historial')) || [];
+    let historialDiv = document.getElementById('historial');
+
+    if (historial.length === 0) {
+        historialDiv.innerHTML = "<p>No hay registros en el historial.</p>";
+        return;
+    }
+
+    historialDiv.innerHTML = historial.map(item => `
+        <div class="historial-item">
+            <p><strong>Nombre:</strong> ${item.nombre}</p>
+            <p><strong>Edad:</strong> ${item.edad} años</p>
+            <p><strong>IMC:</strong> ${item.imc} (${item.imcClasificacion})</p>
+            <p><strong>PAM:</strong> ${item.pam}</p>
+            <hr>
+        </div>
+    `).join('');
+}
+
     </script>
 </body>
 </html>
