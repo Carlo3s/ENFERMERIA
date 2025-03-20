@@ -89,53 +89,31 @@ document.addEventListener("DOMContentLoaded", function() {
                 });
         });
    
-    // Función para limpiar el historial de valoraciones
+   // Función para limpiar el historial de valoraciones
 function limpiarHistorial() {
     if (confirm("¿Estás seguro de que deseas borrar todo el historial?")) {
-        localStorage.removeItem("historial");
-        actualizarHistorial(); // Refrescar la lista
+        localStorage.removeItem("historial"); // Elimina del almacenamiento local
+        actualizarHistorial(); // Refrescar la lista de historial
+        document.getElementById("listaHistorial").innerHTML = ""; // Limpia la UI
         alert("Historial borrado correctamente.");
     }
 }
 
-// Agregar botón de limpieza en la página
-document.addEventListener("DOMContentLoaded", function() {
-    let botonLimpiar = document.createElement("button");
-    botonLimpiar.textContent = "Limpiar Historial";
-    botonLimpiar.style.marginTop = "10px";
-    botonLimpiar.onclick = limpiarHistorial;
-    document.getElementById("historial").appendChild(botonLimpiar);
-});
-function exportarHistorialPDF() {
-    const { jsPDF } = window.jspdf;
-    let doc = new jsPDF();
-    let historial = document.getElementById("listaHistorial").innerHTML;
-    
-    if (historial.trim() === "") {
-        alert("No hay historial para exportar.");
-        return;
-    }
-    
-    doc.setFont("helvetica");
-    doc.setFontSize(14);
-    doc.text("Historial de Valoraciones", 20, 20);
-    
-    let historialTexto = "";
-    document.querySelectorAll("#listaHistorial li").forEach((item, index) => {
-        historialTexto += `${index + 1}. ${item.innerText}\n\n`;
+// Función para cargar y mostrar el historial
+function actualizarHistorial() {
+    let historial = JSON.parse(localStorage.getItem("historial")) || [];
+    let lista = document.getElementById("listaHistorial");
+
+    lista.innerHTML = ""; // Limpiar antes de volver a mostrar
+
+    historial.forEach((valoracion, index) => {
+        let item = document.createElement("li");
+        item.textContent = `${index + 1}. ${valoracion.nombre} - IMC: ${valoracion.imc} (${valoracion.imcClasificacion})`;
+        lista.appendChild(item);
     });
-    
-    doc.setFontSize(12);
-    doc.text(historialTexto, 20, 30);
-    
-    doc.save("Historial_Valoraciones.pdf");
 }
 
-// Agregar botón de exportación en la página
-document.addEventListener("DOMContentLoaded", function() {
-    let botonExportar = document.createElement("button");
-    botonExportar.textContent = "Exportar a PDF";
-    botonExportar.style.marginTop = "10px";
-    botonExportar.onclick = exportarHistorialPDF;
-    document.getElementById("historial").appendChild(botonExportar);
+// Cargar historial cuando la página cargue
+document.addEventListener("DOMContentLoaded", function () {
+    actualizarHistorial();
 });
