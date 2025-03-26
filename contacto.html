@@ -8,6 +8,31 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/emailjs-com@2.6.4/dist/email.min.js"></script>
 </head>
 <body>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
+    
+        const firebaseConfig = {
+            apiKey: "AIzaSyC2_Bftp6pPmQT41MyYMSc6PiYxEAkz9hs",
+            authDomain: "valoracion-enfermeria.firebaseapp.com",
+            projectId: "valoracion-enfermeria",
+            storageBucket: "valoracion-enfermeria.appspot.com",
+            messagingSenderId: "368639381830",
+            appId: "1:368639381830:web:253168bfdc4031a9c95547",
+            measurementId: "G-YNKHWHMKGB"
+        };
+    
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+    
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                // Si no hay usuario autenticado, redirigir a login.html
+                window.location.href = "login.html";
+            }
+        });
+    </script>
+    
     <nav>
         <div class="logo">
            
