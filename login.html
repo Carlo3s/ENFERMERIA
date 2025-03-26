@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login</title>
-  <link rel="stylesheet" href="styleslogin.css">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="wrapper fadeInDown">
@@ -14,29 +14,24 @@
       <div class="fadeIn first">
         <img src="Logo.png" id="icon" alt="User Icon" />
       </div>
-      
-      <!-- Formulario de inicio de sesión -->
+      <!-- Formulario de inicio de sesión con email y password -->
       <form id="loginForm">
-        <input type="email" id="email" class="fadeIn second" placeholder="Email" required>
-        <input type="password" id="password" class="fadeIn third" placeholder="Password" required>
+        <input type="email" id="email" class="fadeIn second" name="email" placeholder="Email">
+        <input type="password" id="password" class="fadeIn third" name="password" placeholder="Password">
         <input type="submit" class="fadeIn fourth" value="Log In">
       </form>
-      
       <!-- Botón para iniciar sesión con Google -->
       <div id="googleSignIn" class="fadeIn fourth">
         <button id="loginGoogle">Iniciar sesión con Google</button>
       </div>
-      
-      <!-- Formulario de registro -->
+      <!-- Formulario de registro con email y password -->
       <form id="registerForm" style="display:none;">
-        <input type="email" id="regEmail" class="fadeIn second" placeholder="Email" required>
-        <input type="password" id="regPassword" class="fadeIn third" placeholder="Password" required>
+        <input type="email" id="regEmail" class="fadeIn second" name="email" placeholder="Email">
+        <input type="password" id="regPassword" class="fadeIn third" name="password" placeholder="Password">
         <input type="submit" class="fadeIn fourth" value="Sign Up">
       </form>
-      
-      <!-- Enlace para recuperar contraseña -->
       <div id="formFooter">
-        <a id="forgotPassword" class="underlineHover" href="#">¿Olvidaste tu contraseña?</a>
+        <a class="underlineHover" href="#" id="forgotPassword">Forgot Password?</a>
       </div>
     </div>
   </div>
@@ -49,7 +44,8 @@
       createUserWithEmailAndPassword, 
       onAuthStateChanged, 
       signInWithPopup, 
-      GoogleAuthProvider 
+      GoogleAuthProvider, 
+      sendPasswordResetEmail
     } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
 
     const firebaseConfig = {
@@ -60,51 +56,85 @@
       messagingSenderId: "368639381830",
       appId: "1:368639381830:web:253168bfdc4031a9c95547",
       measurementId: "G-YNKHWHMKGB"
+    };
 
+    // Inicializa Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    // Autenticación con email y contraseña
+    // Inicio de sesión con email y password
     document.getElementById("loginForm").addEventListener("submit", function(event) {
       event.preventDefault();
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
       signInWithEmailAndPassword(auth, email, password)
-        .then(() => window.location.href = "index.html")
-        .catch(error => alert("Error: " + error.message));
+        .then((userCredential) => {
+          window.location.href = "index.html";
+        })
+        .catch((error) => {
+          alert("Error: " + error.message);
+        });
     });
 
-    // Registro de usuarios
+    // Registro con email y password
     document.getElementById("registerForm").addEventListener("submit", function(event) {
       event.preventDefault();
       const email = document.getElementById("regEmail").value;
       const password = document.getElementById("regPassword").value;
       createUserWithEmailAndPassword(auth, email, password)
-        .then(() => alert("Registro exitoso!"))
-        .catch(error => alert("Error: " + error.message));
+        .then((userCredential) => {
+          alert("Usuario registrado con éxito!");
+          document.getElementById("signInTab").click();
+        })
+        .catch((error) => {
+          alert("Error: " + error.message);
+        });
     });
 
     // Inicio de sesión con Google
     document.getElementById("loginGoogle").addEventListener("click", () => {
       const provider = new GoogleAuthProvider();
       signInWithPopup(auth, provider)
-        .then(() => window.location.href = "index.html")
-        .catch(error => alert("Error: " + error.message));
+        .then((result) => {
+          window.location.href = "index.html";
+        })
+        .catch((error) => {
+          alert("Error: " + error.message);
+        });
     });
 
-    // Olvidé mi contraseña
-    document.getElementById("forgotPassword").addEventListener("click", () => {
-      const email = prompt("Ingrese su correo para recuperar la contraseña:");
-      if (email) {
-        sendPasswordResetEmail(auth, email)
-          .then(() => alert("Correo de recuperación enviado."))
-          .catch(error => alert("Error: " + error.message));
+    // Detectar estado de autenticación para redirigir si ya está logueado
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        window.location.href = "index.html";
       }
     });
 
-    // Redirigir si el usuario ya está autenticado
-    onAuthStateChanged(auth, (user) => {
-      if (user) window.location.href = "index.html";
+    // Restablecer contraseña
+    document.getElementById("forgotPassword").addEventListener("click", () => {
+      const email = prompt("Ingrese su correo para restablecer la contraseña:");
+      if (email) {
+        sendPasswordResetEmail(auth, email)
+          .then(() => {
+            alert("Se ha enviado un enlace de restablecimiento a su correo.");
+          })
+          .catch((error) => {
+            alert("Error: " + error.message);
+          });
+      }
+    });
+
+    // Cambiar entre formularios de inicio de sesión y registro
+    document.getElementById("signUpTab").addEventListener("click", () => {
+      document.getElementById("loginForm").style.display = "none";
+      document.getElementById("googleSignIn").style.display = "none";
+      document.getElementById("registerForm").style.display = "block";
+    });
+
+    document.getElementById("signInTab").addEventListener("click", () => {
+      document.getElementById("loginForm").style.display = "block";
+      document.getElementById("googleSignIn").style.display = "block";
+      document.getElementById("registerForm").style.display = "none";
     });
   </script>
 </body>
