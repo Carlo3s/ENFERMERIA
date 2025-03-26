@@ -49,18 +49,17 @@
       createUserWithEmailAndPassword, 
       onAuthStateChanged, 
       signInWithPopup, 
-      GoogleAuthProvider,
-      sendPasswordResetEmail
+      GoogleAuthProvider 
     } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
 
     const firebaseConfig = {
-      apiKey: "TU_API_KEY",
+      apiKey: "AIzaSyC2_Bftp6pPmQT41MyYMSc6PiYxEAkz9hs",
       authDomain: "valoracion-enfermeria.firebaseapp.com",
       projectId: "valoracion-enfermeria",
       storageBucket: "valoracion-enfermeria.appspot.com",
       messagingSenderId: "368639381830",
-      appId: "1:368639381830:web:253168bfdc4031a9c95547"
-    };
+      appId: "1:368639381830:web:253168bfdc4031a9c95547",
+      measurementId: "G-YNKHWHMKGB"
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
