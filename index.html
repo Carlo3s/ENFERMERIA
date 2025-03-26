@@ -6,10 +6,6 @@
     <title>Valoración en Enfermería</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-<script src="exportar_pdf.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="calculadora_imc.js"></script>
-
 <body>
     <nav>
         <div class="logo">
@@ -20,6 +16,7 @@
             <li><a href="historial.html">Historial</a></li>
             <li><a href="acerca.html">Acerca de</a></li>
             <li><a href="contacto.html">Contacto</a></li>
+            <li><button id="logout" style="cursor:pointer; background:none; border:none; color:white; font-size:16px;">Cerrar Sesión</button></li>
         </ul>
     </nav>
     
@@ -74,7 +71,7 @@
         <button onclick="calcularValores()">Calcular</button>
         <div class="resultado" id="resultado"></div>
     </div>
-    
+
     <script>
         function calcularValores() {
             let nombre = document.getElementById('nombre').value;
@@ -145,5 +142,40 @@
             `;
         }
     </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyC2_Bftp6pPmQT41MyYMSc6PiYxEAkz9hs",
+            authDomain: "valoracion-enfermeria.firebaseapp.com",
+            projectId: "valoracion-enfermeria",
+            storageBucket: "valoracion-enfermeria.appspot.com",
+            messagingSenderId: "368639381830",
+            appId: "1:368639381830:web:253168bfdc4031a9c95547",
+            measurementId: "G-YNKHWHMKGB"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Redirige al login si el usuario no está autenticado
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = "login.html";
+            }
+        });
+
+        // Cerrar sesión
+        document.getElementById("logout").addEventListener("click", () => {
+            signOut(auth).then(() => {
+                window.location.href = "login.html";
+            }).catch((error) => {
+                console.error("Error al cerrar sesión: ", error);
+            });
+        });
+    </script>
+
 </body>
 </html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="wrapper fadeInDown">
+        <div id="formContent">
+            <h2 class="active" id="signInTab"> Sign In </h2>
+            <h2 class="inactive underlineHover" id="signUpTab">Sign Up</h2>
+            <div class="fadeIn first">
+                <img src="Logo.png" id="icon" alt="User Icon" />
+            </div>
+            <form id="loginForm">
+                <input type="email" id="email" class="fadeIn second" name="email" placeholder="Email">
+                <input type="password" id="password" class="fadeIn third" name="password" placeholder="Password">
+                <input type="submit" class="fadeIn fourth" value="Log In">
+            </form>
+            <form id="registerForm" style="display:none;">
+                <input type="email" id="regEmail" class="fadeIn second" name="email" placeholder="Email">
+                <input type="password" id="regPassword" class="fadeIn third" name="password" placeholder="Password">
+                <input type="submit" class="fadeIn fourth" value="Sign Up">
+            </form>
+            <div id="formFooter">
+                <a class="underlineHover" href="#">Forgot Password?</a>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyC2_Bftp6pPmQT41MyYMSc6PiYxEAkz9hs",
+            authDomain: "valoracion-enfermeria.firebaseapp.com",
+            projectId: "valoracion-enfermeria",
+            storageBucket: "valoracion-enfermeria.appspot.com",
+            messagingSenderId: "368639381830",
+            appId: "1:368639381830:web:253168bfdc4031a9c95547",
+            measurementId: "G-YNKHWHMKGB"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        document.getElementById("loginForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    window.location.href = "index.html";
+                })
+                .catch((error) => {
+                    alert("Error: " + error.message);
+                });
+        });
+
+        document.getElementById("registerForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const email = document.getElementById("regEmail").value;
+            const password = document.getElementById("regPassword").value;
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    alert("User registered successfully!");
+                    document.getElementById("signInTab").click();
+                })
+                .catch((error) => {
+                    alert("Error: " + error.message);
+                });
+        });
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                window.location.href = "index.html";
+            }
+        });
+
+        document.getElementById("signUpTab").addEventListener("click", () => {
+            document.getElementById("loginForm").style.display = "none";
+            document.getElementById("registerForm").style.display = "block";
+        });
+
+        document.getElementById("signInTab").addEventListener("click", () => {
+            document.getElementById("loginForm").style.display = "block";
+            document.getElementById("registerForm").style.display = "none";
+        });
+    </script>
+</body>
+</html>
