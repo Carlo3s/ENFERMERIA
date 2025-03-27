@@ -2,19 +2,19 @@
 form {
     width: 100%;
     background: #fff;
-    padding: 20px;
+    padding: 15px;
     border-radius: 8px;
 }
 
 .section {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 details {
-    margin: 10px 0;
+    margin: 8px 0;
     border: 1px solid #ddd;
     border-radius: 5px;
-    padding: 10px;
+    padding: 8px;
 }
 
 summary {
@@ -30,7 +30,7 @@ summary:hover {
 }
 
 .question {
-    margin: 15px 0;
+    margin: 10px 0;
 }
 
 label {
@@ -45,7 +45,7 @@ textarea,
 select {
     width: 100%;
     padding: 8px;
-    margin-top: 5px;
+    margin-top: 3px;
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 14px;
@@ -64,20 +64,21 @@ button[type="submit"] {
     display: block;
     width: 100%;
     padding: 10px;
-    background: #007bff; /* Usar el mismo color que styles.css */
+    background: #007bff;
     color: #fff;
     border: none;
     border-radius: 5px;
     font-size: 16px;
     cursor: pointer;
-    margin-top: 20px;
+    margin-top: 15px;
 }
 
 button[type="submit"]:hover {
     background: #0056b3;
 }
 
-@media (max-width: 600px) {
+/* Responsividad */
+@media (max-width: 768px) {
     form {
         padding: 10px;
     }
@@ -85,6 +86,42 @@ button[type="submit"]:hover {
     input[type="number"],
     textarea,
     select {
+        font-size: 13px;
+        padding: 6px;
+    }
+    label {
+        font-size: 13px;
+    }
+    summary {
+        font-size: 13px;
+    }
+    .question {
+        margin: 8px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    form {
+        padding: 8px;
+    }
+    input[type="text"],
+    input[type="number"],
+    textarea,
+    select {
         font-size: 12px;
+        padding: 5px;
+    }
+    label {
+        font-size: 12px;
+    }
+    summary {
+        font-size: 12px;
+    }
+    button[type="submit"] {
+        font-size: 14px;
+        padding: 8px;
+    }
+    .question {
+        margin: 5px 0;
     }
 }
