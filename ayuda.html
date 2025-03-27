@@ -1,4 +1,3 @@
-<!-- 🔹 Código HTML mejorado -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -25,99 +24,34 @@
 
 <div class="container">
     <h2>Bienvenido(a), aquí encontrarás recursos para practicar</h2>
-
-    <!-- 🔹 Panel de subida (Solo visible para el administrador) -->
-    <div id="adminPanel" style="display: none;">
-        <input type="file" id="pdfUpload" accept="application/pdf" multiple>
-        <button onclick="uploadPDF()">Subir PDF</button>
+    <div id="pdf-lista">
+        <!-- Aquí se mostrarán los PDFs automáticamente -->
     </div>
-
-    <h3>Lista de PDFs</h3>
-    <ul id="pdfList"></ul>
 </div>
 
-<!-- 🔹 Firebase -->
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
-    import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-storage.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
+<script>
+    // Lista de PDFs que tienes en la carpeta "docs"
+    const pdfs = [
+        "ENTREVISTA.pdf",
+        "MANUAL_ENFERMERIA.pdf",
+        "GUIA_PRACTICA.pdf"
+    ];
 
-    // 🔹 Configuración de Firebase
-    const firebaseConfig = {
-        apiKey: "AIzaSyC2_Bftp6pPmQT41MyYMSc6PiYxEAkz9hs",
-        authDomain: "valoracion-enfermeria.firebaseapp.com",
-        projectId: "valoracion-enfermeria",
-        storageBucket: "valoracion-enfermeria.appspot.com",
-        messagingSenderId: "368639381830",
-        appId: "1:368639381830:web:253168bfdc4031a9c95547",
-        measurementId: "G-YNKHWHMKGB"
-    };
+    const pdfLista = document.getElementById("pdf-lista");
 
-    const app = initializeApp(firebaseConfig);
-    const storage = getStorage(app);
-    const auth = getAuth(app);
+    // Generar la lista de PDFs dinámicamente
+    pdfs.forEach(pdf => {
+        const link = document.createElement("a");
+        link.href = `docs/${pdf}`;
+        link.textContent = pdf;
+        link.target = "_blank"; // Abre en nueva pestaña
+        link.style.display = "block";
+        link.style.marginBottom = "10px";
 
-    // 🔹 Email del administrador
-    const adminEmail = "youvlog01@gmail.com"; 
-
-    // 🔹 Verifica la sesión del usuario
-    onAuthStateChanged(auth, (user) => {
-        if (!user) {
-            window.location.href = "login.html";
-        } else {
-            // Si el usuario es el administrador, muestra la opción de subir archivos
-            if (user.email === adminEmail) {
-                document.getElementById("adminPanel").style.display = "block";
-            }
-        }
+        pdfLista.appendChild(link);
     });
-
-    // 🔹 Cerrar sesión
-    document.getElementById("logout").addEventListener("click", () => {
-        signOut(auth).then(() => {
-            window.location.href = "login.html";
-        }).catch((error) => {
-            console.error("Error al cerrar sesión: ", error);
-        });
-    });
-
-    // 🔹 Subir archivos PDF (solo administrador)
-    async function uploadPDF() {
-        const fileInput = document.getElementById("pdfUpload");
-        const files = fileInput.files;
-
-        if (files.length === 0) {
-            alert("Selecciona al menos un archivo PDF.");
-            return;
-        }
-
-        for (let file of files) {
-            const storageRef = ref(storage, 'pdfs/' + file.name);
-            await uploadBytes(storageRef, file);
-            console.log(`Archivo ${file.name} subido correctamente`);
-        }
-
-        alert("Archivos subidos correctamente.");
-        loadPDFs();
-    }
-
-    // 🔹 Cargar la lista de PDFs
-    async function loadPDFs() {
-        const listRef = ref(storage, "pdfs");
-        const pdfList = document.getElementById("pdfList");
-        pdfList.innerHTML = "";
-
-        const res = await listAll(listRef);
-        for (let item of res.items) {
-            const url = await getDownloadURL(item);
-            const li = document.createElement("li");
-            li.innerHTML = `<a href="${url}" target="_blank">${item.name}</a>`;
-            pdfList.appendChild(li);
-        }
-    }
-
-    // 🔹 Cargar PDFs al iniciar la página
-    loadPDFs();
 </script>
+
 </body>
 </html>
+
