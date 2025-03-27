@@ -105,42 +105,46 @@
     
     input[type=text], input[type=password] {
       background-color: #f6f6f6;
-      border: 2px solid #d1d1d1;
+      border: 2px solid #5fbae9;
       color: #0d0d0d;
       padding: 15px 32px;
       text-align: center;
-      font-size: 16px;
-      margin: 5px;
+      font-size: 18px;
+      margin: 10px;
       width: 85%;
-      border-radius: 5px;
+      border-radius: 10px;
       transition: all 0.3s ease-in-out;
+      font-weight: bold;
     }
     
     input[type=text]:focus, input[type=password]:focus {
       background-color: #fff;
       border-color: #5fbae9;
-      box-shadow: 0 0 8px rgba(95,186,233,0.6);
+      box-shadow: 0 0 12px rgba(95,186,233,0.8);
     }
     
     .google-login {
       display: flex;
       align-items: center;
       justify-content: center;
-      background-color: white;
-      border: 1px solid #ddd;
-      padding: 10px 20px;
-      border-radius: 5px;
+      background-color: #ffffff;
+      border: 2px solid #5fbae9;
+      padding: 12px 25px;
+      border-radius: 10px;
       cursor: pointer;
       transition: all 0.3s ease-in-out;
+      font-weight: bold;
+      font-size: 16px;
     }
     
     .google-login img {
-      width: 20px;
+      width: 25px;
       margin-right: 10px;
     }
     
     .google-login:hover {
       background-color: #f1f1f1;
+      border-color: #39ace7;
     }
     
     /* OTHERS */
