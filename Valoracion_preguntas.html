@@ -4,16 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guía de Valoración - Modelo de Adaptación de Roy</title>
-    <link rel="stylesheet" href="styvaloracion.css">
     <link rel="stylesheet" href="styles.css">
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .section { margin-bottom: 20px; }
-        .question { margin: 10px 0; }
-        .hidden { display: none; }
-        details { margin: 10px 0; }
-        summary { cursor: pointer; font-weight: bold; }
-    </style>
+    <link rel="stylesheet" href="styvaloracion.css">
 </head>
 <body>
     <nav>
@@ -26,7 +18,7 @@
             <li><a href="acerca.html">Acerca de</a></li>
             <li><a href="contacto.html">Contacto</a></li>
             <li><a href="Valoracion_preguntas.html">Entrevista</a></li>
-            <li><button id="logout" style="cursor:pointer; background:none; border:none; color:white; font-size:16px;">Cerrar Sesión</button></li>
+            <li><button id="logout">Cerrar Sesión</button></li>
         </ul>
     </nav>
 
@@ -176,29 +168,34 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        // Verificar autenticación al cargar la página
         onAuthStateChanged(auth, (user) => {
             if (!user) {
                 window.location.href = "login.html";
             }
         });
 
+        // Manejar el cierre de sesión
         document.getElementById("logout").addEventListener("click", () => {
             signOut(auth).then(() => {
                 window.location.href = "login.html";
             }).catch((error) => {
                 console.error("Error al cerrar sesión: ", error);
+                alert("Error al cerrar sesión: " + error.message);
             });
         });
 
+        // Manejar el envío del formulario
         const form = document.getElementById('assessmentForm');
         form.addEventListener('submit', async (e) => {
-            e.preventDefault();
+            e.preventDefault(); // Prevenir el comportamiento por defecto del formulario
+
             const user = auth.currentUser;
             if (!user) {
                 alert("Debes iniciar sesión para enviar el formulario.");
+                window.location.href = "login.html";
                 return;
             }
-        });
 
             const formData = new FormData(form);
             let data = Object.fromEntries(formData);
@@ -221,7 +218,7 @@
             }
 
             if (ps && pd) {
-                data.pam = ((2 * pd) + ps / 3).toFixed(2);
+                data.pam = (((2 * pd) + ps) / 3).toFixed(2);
             }
 
             // Manejar múltiples valores (checkboxes)
@@ -237,10 +234,71 @@
                 window.location.href = "historial.html";
             } catch (error) {
                 console.error("Error al guardar valoración:", error);
-                alert("Error al guardar la valoración.");
+                alert("Error al guardar la valoración: " + error.message);
             }
-    </script>
+        });
 
-    <script src="scriptentre.js" defer></script>
+        // Show/hide follow-up questions
+        function toggleFollowUp(elementId, show) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.classList.toggle('hidden', !show);
+            }
+        }
+
+        // Calculate frequency of respiratory issues
+        function calculateFrequency() {
+            const problemas = document.querySelector('input[name="problemas_respiratorios"]').value;
+            const resultado = document.getElementById('frecuencia_resultado');
+            if (problemas > 0) {
+                const frecuenciaMensual = (problemas / 6).toFixed(2);
+                resultado.textContent = ` (Aproximadamente ${frecuenciaMensual} veces por mes)`;
+            } else {
+                resultado.textContent = '';
+            }
+        }
+
+        // Auto-fill smoking-related questions
+        function updateSmokingRelated() {
+            const fuma = document.querySelector('input[name="fuma"]:checked')?.value;
+            if (fuma === 'No') {
+                const noHumo = document.querySelector('input[name="humo_ambiente"][value="No"]');
+                if (noHumo) {
+                    noHumo.checked = true;
+                }
+            }
+        }
+
+        // Auto-fill family history
+        function updateFamilyHistory() {
+            const antecedentes = document.querySelector('input[name="antecedentes_respiratorios"]:checked')?.value;
+            // No hace nada por ahora, pero está listo para futuras implementaciones
+        }
+
+        // Auto-fill alcohol-related questions
+        function updateAlcoholRelated() {
+            const alcohol = document.querySelector('input[name="consume_alcohol"]:checked')?.value;
+            // No hace nada por ahora, pero está listo para futuras implementaciones
+        }
+
+        // Update gender-related questions
+        function updateGenderRelated() {
+            const sexo = document.querySelector('select[name="sexo"]').value;
+            if (sexo) {
+                document.querySelectorAll('.gender-related').forEach(el => {
+                    el.value = sexo === 'M' ? 'Hombre' : 'Mujer';
+                });
+            }
+        }
+
+        // Handle "Otros" in spiritual beliefs
+        function toggleOtrosCreencias() {
+            const otrosCheckbox = document.querySelector('input[name="creencias"][value="Otros"]');
+            const otrosInput = document.getElementById('creencias_otros');
+            if (otrosCheckbox && otrosInput) {
+                otrosInput.classList.toggle('hidden', !otrosCheckbox.checked);
+            }
+        }
+    </script>
 </body>
 </html>

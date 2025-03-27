@@ -1,10 +1,9 @@
+/* styvaloracion.css */
 form {
-    max-width: 800px;
-    margin: 0 auto;
+    width: 100%;
     background: #fff;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .section {
@@ -65,7 +64,7 @@ button[type="submit"] {
     display: block;
     width: 100%;
     padding: 10px;
-    background: #2ecc71;
+    background: #007bff; /* Usar el mismo color que styles.css */
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -75,7 +74,7 @@ button[type="submit"] {
 }
 
 button[type="submit"]:hover {
-    background: #27ae60;
+    background: #0056b3;
 }
 
 @media (max-width: 600px) {
