@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <nav> 
+    <nav>
         <div class="logo">
             <a href="index.html"><img src="logo.png" alt="Logo" id="logo"></a>
         </div>
@@ -18,21 +18,21 @@
             <li><a href="contacto.html">Contacto</a></li>
             <li><a href="Valoracion_preguntas.html">Entrevista</a></li>
             <li><a href="ayuda.html">Recursos</a></li>
-            <li><button id="logout" style="cursor:pointer; background:none; border:none; color:white; font-size:16px;">Cerrar Sesión</button></li>
+            <li><button id="logout">Cerrar Sesión</button></li>
         </ul>
     </nav>
-
+    
     <div class="container">
         <h2>Historial de Valoraciones</h2>
-        <ul id="listaHistorial"></ul>
-        <button onclick="limpiarHistorial()">🗑️ Borrar Historial</button>
+        <button onclick="exportarPDF()">Descargar PDF</button>
+        <button onclick="exportarJSON()">Descargar JSON</button>
+        <div id="historial"></div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
-        import { getFirestore, collection, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
-
+    
         const firebaseConfig = {
             apiKey: "AIzaSyC2_Bftp6pPmQT41MyYMSc6PiYxEAkz9hs",
             authDomain: "valoracion-enfermeria.firebaseapp.com",
@@ -42,19 +42,16 @@
             appId: "1:368639381830:web:253168bfdc4031a9c95547",
             measurementId: "G-YNKHWHMKGB"
         };
-
+    
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-        const db = getFirestore(app);
-
+    
         onAuthStateChanged(auth, (user) => {
             if (!user) {
                 window.location.href = "login.html";
-            } else {
-                mostrarHistorial(user.uid); // Cargar historial al autenticarse
             }
         });
-
+    
         document.getElementById("logout").addEventListener("click", () => {
             signOut(auth).then(() => {
                 window.location.href = "login.html";
@@ -62,64 +59,54 @@
                 console.error("Error al cerrar sesión: ", error);
             });
         });
+    </script>
 
-        async function mostrarHistorial(userId) {
-            let listaHistorial = document.getElementById('listaHistorial');
-            listaHistorial.innerHTML = "";
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            mostrarHistorial();
+        });
 
-            try {
-                const querySnapshot = await getDocs(collection(db, `users/${userId}/valoraciones`));
-                if (querySnapshot.empty) {
-                    listaHistorial.innerHTML = "<p>No hay valoraciones registradas.</p>";
-                    return;
-                }
+        function mostrarHistorial() {
+            const historialDiv = document.getElementById("historial");
+            const historial = JSON.parse(localStorage.getItem("valoraciones")) || [];
 
-                querySnapshot.forEach((doc, index) => {
-                    const valoracion = doc.data();
-                    let imcData = clasificarIMC(valoracion.imc || 0);
-                    let listItem = document.createElement('li');
-                    listItem.innerHTML = `
-                        <p><strong>${index + 1}. ${valoracion.nombre}</strong></p>
-                        <p><strong>Edad:</strong> ${valoracion.edad || 'N/A'} años</p>
-                        <p><strong>Peso:</strong> ${valoracion.peso || 'N/A'} kg</p>
-                        <p><strong>Altura:</strong> ${valoracion.altura || 'N/A'} m</p>
-                        <p style="color:${imcData.color};"><strong>IMC:</strong> ${valoracion.imc || 'N/A'} (${imcData.emoji} ${imcData.clasificacion})</p>
-                        <p><strong>Presión Arterial Media:</strong> ${valoracion.pam || 'N/A'}</p>
-                    `;
-                    listaHistorial.appendChild(listItem);
-                });
-            } catch (error) {
-                console.error("Error al cargar historial:", error);
-                listaHistorial.innerHTML = "<p>Error al cargar el historial.</p>";
+            if (historial.length === 0) {
+                historialDiv.innerHTML = "<p>No hay valoraciones guardadas.</p>";
+                return;
             }
+
+            historial.forEach((item, index) => {
+                const div = document.createElement("div");
+                div.classList.add("valoracion");
+                div.innerHTML = `<h3>Valoración ${index + 1}</h3>
+                                 <p>Paciente: ${item.paciente}</p>
+                                 <p>Resultado: <span class="${item.semaforo}">${item.semaforo.toUpperCase()}</span></p>`;
+                historialDiv.appendChild(div);
+            });
         }
 
-        function clasificarIMC(imc) {
-            if (imc < 18.5) return { clasificacion: "Bajo peso", color: "blue", emoji: "🔵" };
-            if (imc < 24.9) return { clasificacion: "Peso saludable", color: "green", emoji: "🟢" };
-            if (imc < 29.9) return { clasificacion: "Sobrepeso", color: "orange", emoji: "🟠" };
-            if (imc < 34.9) return { clasificacion: "Obesidad I", color: "red", emoji: "🔴" };
-            if (imc < 39.9) return { clasificacion: "Obesidad II", color: "purple", emoji: "🟣" };
-            return { clasificacion: "Obesidad III", color: "darkviolet", emoji: "🟪" };
+        function exportarPDF() {
+            const historial = JSON.parse(localStorage.getItem("valoraciones")) || [];
+            let contenido = "Historial de Valoraciones\n\n";
+            historial.forEach((item, index) => {
+                contenido += `Valoración ${index + 1}\nPaciente: ${item.paciente}\nResultado: ${item.semaforo.toUpperCase()}\n\n`;
+            });
+            
+            const blob = new Blob([contenido], { type: "application/pdf" });
+            const enlace = document.createElement("a");
+            enlace.href = URL.createObjectURL(blob);
+            enlace.download = "historial_valoraciones.pdf";
+            enlace.click();
         }
 
-        async function limpiarHistorial() {
-            const user = auth.currentUser;
-            if (!user) return;
-            if (confirm("¿Estás seguro de borrar todo el historial?")) {
-                try {
-                    const querySnapshot = await getDocs(collection(db, `users/${user.uid}/valoraciones`));
-                    const deletePromises = querySnapshot.docs.map((docSnapshot) => deleteDoc(doc(db, `users/${user.uid}/valoraciones`, docSnapshot.id)));
-                    await Promise.all(deletePromises);
-                    mostrarHistorial(user.uid);
-                } catch (error) {
-                    console.error("Error al borrar historial:", error);
-                    alert("Error al borrar el historial.");
-                }
-            }
+        function exportarJSON() {
+            const historial = JSON.parse(localStorage.getItem("valoraciones")) || [];
+            const blob = new Blob([JSON.stringify(historial, null, 2)], { type: "application/json" });
+            const enlace = document.createElement("a");
+            enlace.href = URL.createObjectURL(blob);
+            enlace.download = "historial_valoraciones.json";
+            enlace.click();
         }
-
-        window.limpiarHistorial = limpiarHistorial;
     </script>
 </body>
 </html>
