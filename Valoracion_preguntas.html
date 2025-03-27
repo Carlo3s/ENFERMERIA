@@ -3,209 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guía de Valoración - Modelo de Adaptación de Roy</title>
-    <link rel="stylesheet" href="styvaloracion.css">
-    <script src="scriptentre.js" defer></script>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .section { margin-bottom: 20px; }
-        .question { margin: 10px 0; }
-        .hidden { display: none; }
-        details { margin: 10px 0; }
-        summary { cursor: pointer; font-weight: bold; }
-    </style>
+    <title>Entrevista - Valoración</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Guía de Valoración de Conductas y Estímulos del Adulto</h1>
     <nav>
+        <div class="logo">
+            <a href="index.html"><img src="logo.png" alt="Logo" id="logo"></a>
+        </div>
         <ul>
             <li><a href="index.html">Inicio</a></li>
             <li><a href="historial.html">Historial</a></li>
             <li><a href="acerca.html">Acerca de</a></li>
             <li><a href="contacto.html">Contacto</a></li>
             <li><a href="Valoracion_preguntas.html">Entrevista</a></li>
-            <li><button id="logout" style="cursor:pointer; background:none; border:none; color:white; font-size:16px;">Cerrar Sesión</button></li>
+            <li><button id="logout">Cerrar Sesión</button></li>
         </ul>
     </nav>
 
-    <form id="assessmentForm">
-        <!-- Datos de Identificación -->
-        <details open id="identificacion">
-            <summary>Datos de Identificación</summary>
-            <div class="question"><label>Nombre: <input type="text" name="nombre" required></label></div>
-            <div class="question"><label>Edad: <input type="number" name="edad" min="0" required></label></div>
-            <div class="question"><label>Sexo: 
-                <select name="sexo" required onchange="updateGenderRelated()">
-                    <option value="">Seleccione</option>
-                    <option value="M">Masculino</option>
-                    <option value="F">Femenino</option>
-                </select></label></div>
-            <div class="question"><label>Institución y Servicio: <input type="text" name="institucion"></label></div>
-            <div class="question"><label>Nivel de escolaridad: <input type="text" name="escolaridad"></label></div>
-            <div class="question"><label>No de Expediente: <input type="text" name="expediente"></label></div>
-        </details>
-
-        <!-- Modo Fisiológico -->
-        <details id="modo-fisiologico">
-            <summary>1. Modo Fisiológico</summary>
-            <!-- Necesidad de Oxigenación -->
-            <h3>Necesidad de Oxigenación</h3>
-            <div class="question" id="q1">
-                <label>¿Ha tenido cambios en su respiración?</label><br>
-                <input type="radio" name="cambios_respiracion" value="Sí" onclick="toggleFollowUp('q1_followup', true)"> Sí
-                <input type="radio" name="cambios_respiracion" value="No" onclick="toggleFollowUp('q1_followup', false)"> No
-                <div id="q1_followup" class="hidden"><label>Especificar: <input type="text" name="cambios_respiracion_detalle"></label></div>
-            </div>
-            <div class="question"><label>¿Cuántas veces ha tenido problemas respiratorios en los últimos 6 meses? <input type="number" name="problemas_respiratorios" min="0" oninput="calculateFrequency()"></label><span id="frecuencia_resultado"></span></div>
-            <div class="question" id="q3"><label>¿Toma medicamentos para problemas respiratorios?</label><br>
-                <input type="radio" name="medicamentos_respiratorios" value="Sí" onclick="toggleFollowUp('q3_followup', true)"> Sí
-                <input type="radio" name="medicamentos_respiratorios" value="No" onclick="toggleFollowUp('q3_followup', false)"> No
-                <div id="q3_followup" class="hidden"><label>Especificar: <input type="text" name="medicamentos_detalle"></label></div>
-            </div>
-            <div class="question" id="q4"><label>¿Fuma?</label><br>
-                <input type="radio" name="fuma" value="Sí" onclick="toggleFollowUp('q4_followup', true); updateSmokingRelated()"> Sí
-                <input type="radio" name="fuma" value="No" onclick="toggleFollowUp('q4_followup', false); updateSmokingRelated()"> No
-                <div id="q4_followup" class="hidden">
-                    <label>Cigarrillos al día: <input type="number" name="cigarrillos_dia" min="0"></label><br>
-                    <label>¿Ha consumido tabaco alguna vez? <input type="radio" name="fuma_historia" value="Sí"> Sí <input type="radio" name="fuma_historia" value="No"> No</label>
+    <div class="container">
+        <h1>Guía de Valoración - Modelo de Adaptación de Roy</h1>
+        <form id="assessmentForm">
+            <details open id="identificacion">
+                <summary>Datos de Identificación</summary>
+                <div class="question"><label>Nombre: <input type="text" name="nombre" required></label></div>
+                <div class="question"><label>Edad: <input type="number" name="edad" min="0" required></label></div>
+                <div class="question"><label>Sexo: 
+                    <select name="sexo" required>
+                        <option value="">Seleccione</option>
+                        <option value="M">Masculino</option>
+                        <option value="F">Femenino</option>
+                    </select></label></div>
+                <div class="question"><label>Peso (kg): <input type="number" name="peso"></label></div>
+                <div class="question"><label>Altura (m): <input type="number" step="0.01" name="altura"></label></div>
+                <div class="question"><label>Presión Sistólica: <input type="number" name="ps"></label></div>
+                <div class="question"><label>Presión Diastólica: <input type="number" name="pd"></label></div>
+            </details>
+            <!-- Modo Fisiológico - Ejemplo -->
+            <details id="modo-fisiologico">
+                <summary>1. Modo Fisiológico</summary>
+                <h3>Necesidad de Oxigenación</h3>
+                <div class="question" id="q1">
+                    <label>¿Ha tenido cambios en su respiración?</label><br>
+                    <input type="radio" name="cambios_respiracion" value="Sí"> Sí
+                    <input type="radio" name="cambios_respiracion" value="No"> No
+                    <div id="q1_followup" class="hidden"><label>Especificar: <input type="text" name="cambios_respiracion_detalle"></label></div>
                 </div>
-            </div>
-            <div class="question"><label>¿Hay humo o contaminantes en su ambiente? <input type="radio" name="humo_ambiente" value="Sí"> Sí <input type="radio" name="humo_ambiente" value="No"> No</label></div>
-            <div class="question" id="q8"><label>¿Familiares con problemas respiratorios?</label><br>
-                <input type="radio" name="antecedentes_respiratorios" value="Sí" onclick="toggleFollowUp('q8_followup', true); updateFamilyHistory()"> Sí
-                <input type="radio" name="antecedentes_respiratorios" value="No" onclick="toggleFollowUp('q8_followup', false); updateFamilyHistory()"> No
-                <div id="q8_followup" class="hidden"><label>Especificar: <input type="text" name="antecedentes_detalle"></label></div>
-            </div>
+                <!-- Agrega más preguntas aquí -->
+            </details>
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
 
-            <!-- Necesidad de Nutrición -->
-            <h3>Necesidad de Nutrición</h3>
-            <div class="question"><label>Alimentos que consume en el hogar: <textarea name="alimentos_hogar"></textarea></label></div>
-            <div class="question" id="q14"><label>¿Consume suplementos alimenticios?</label><br>
-                <input type="radio" name="suplementos" value="Sí" onclick="toggleFollowUp('q14_followup', true)"> Sí
-                <input type="radio" name="suplementos" value="No" onclick="toggleFollowUp('q14_followup', false)"> No
-                <div id="q14_followup" class="hidden"><label>¿Cuáles? <input type="text" name="suplementos_detalle"></label></div>
-            </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
 
-            <!-- Necesidad de Eliminación -->
-            <h3>Necesidad de Eliminación</h3>
-            <div class="question"><label>¿Cuántas veces orina en 24 hrs? <input type="number" name="frecuencia_orina" min="0"></label></div>
-            <div class="question"><label>¿Ha cambiado este patrón recientemente? <input type="radio" name="cambio_orina" value="Sí"> Sí <input type="radio" name="cambio_orina" value="No"> No</label></div>
+        const firebaseConfig = {
+            apiKey: "AIzaSyC2_Bftp6pPmQT41MyYMSc6PiYxEAkz9hs",
+            authDomain: "valoracion-enfermeria.firebaseapp.com",
+            projectId: "valoracion-enfermeria",
+            storageBucket: "valoracion-enfermeria.appspot.com",
+            messagingSenderId: "368639381830",
+            appId: "1:368639381830:web:253168bfdc4031a9c95547",
+            measurementId: "G-YNKHWHMKGB"
+        };
 
-            <!-- Necesidad de Actividad y Reposo -->
-            <h3>Necesidad de Actividad y Reposo</h3>
-            <div class="question"><label>¿Qué actividades realiza en un día normal? <textarea name="actividades_diarias"></textarea></label></div>
-            <div class="question"><label>¿Cuántas horas duerme en 24 hrs? <input type="number" name="horas_sueno" min="0" max="24"></label></div>
-            <div class="question" id="q12"><label>¿Consume alcohol?</label><br>
-                <input type="radio" name="consume_alcohol" value="Sí" onclick="toggleFollowUp('q12_followup', true); updateAlcoholRelated()"> Sí
-                <input type="radio" name="consume_alcohol" value="No" onclick="toggleFollowUp('q12_followup', false); updateAlcoholRelated()"> No
-                <div id="q12_followup" class="hidden"><label>¿Con qué frecuencia? <input type="text" name="frecuencia_alcohol"></label></div>
-            </div>
-        </details>
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-        <!-- Modo Autoconcepto -->
-        <details id="modo-autoconcepto">
-            <summary>2. Modo Autoconcepto</summary>
-            <div class="question"><label>¿Cómo te sientes físicamente? <input type="text" name="sentimiento_fisico"></label></div>
-            <div class="question"><label>¿Cómo te describes como persona? <input type="text" name="descripcion_personal"></label></div>
-            <div class="question" id="q26"><label>¿Cómo describirías tus creencias espirituales?</label><br>
-                <input type="checkbox" name="creencias" value="Dios"> Dios
-                <input type="checkbox" name="creencias" value="Ser supremo"> Ser supremo
-                <input type="checkbox" name="creencias" value="Orden natural"> Orden natural
-                <input type="checkbox" name="creencias" value="Otros"> Otros <input type="text" name="creencias_otros" class="hidden" id="creencias_otros">
-            </div>
-        </details>
-
-        <!-- Modo Rol -->
-        <details id="modo-rol">
-            <summary>3. Modo Rol</summary>
-            <div class="question"><label>¿Cuáles son los roles que desempeñas? (Marque todos los que apliquen)</label><br>
-                <input type="checkbox" name="roles" value="Esposo(a)"> Esposo(a)<br>
-                <input type="checkbox" name="roles" value="Hijo(a)"> Hijo(a)<br>
-                <input type="checkbox" name="roles" value="Empleado(a)"> Empleado(a)<br>
-                <!-- Add more roles as needed -->
-            </div>
-            <div class="question"><label>¿Cómo afecta su rol de paciente a los roles que desempeña? <textarea name="afectacion_rol"></textarea></label></div>
-        </details>
-
-        <!-- Modo Interdependencia -->
-        <details id="modo-interdependencia">
-            <summary>4. Modo Interdependencia</summary>
-            <div class="question"><label>Indica en orden de importancia quiénes son los seres más significativos en tu vida:</label><br>
-                <input type="text" name="significativos_1" placeholder="1."><br>
-                <input type="text" name="significativos_2" placeholder="2."><br>
-                <input type="text" name="significativos_3" placeholder="3.">
-            </div>
-            <div class="question"><label>¿Con qué red de apoyo cuentas? <textarea name="red_apoyo"></textarea></label></div>
-        </details>
-
-        <button type="submit">Enviar</button>
-    </form>
-
-    <script>
-        // Show/hide follow-up questions
-        function toggleFollowUp(elementId, show) {
-            const element = document.getElementById(elementId);
-            element.classList.toggle('hidden', !show);
-        }
-
-        // Calculate frequency of respiratory issues
-        function calculateFrequency() {
-            const problemas = document.querySelector('input[name="problemas_respiratorios"]').value;
-            const resultado = document.getElementById('frecuencia_resultado');
-            if (problemas > 0) {
-                const frecuenciaMensual = (problemas / 6).toFixed(2);
-                resultado.textContent = ` (Aproximadamente ${frecuenciaMensual} veces por mes)`;
-            } else {
-                resultado.textContent = '';
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = "login.html";
             }
-        }
-
-        // Auto-fill smoking-related questions
-        function updateSmokingRelated() {
-            const fuma = document.querySelector('input[name="fuma"]:checked')?.value;
-            if (fuma === 'No') {
-                document.querySelector('input[name="humo_ambiente"][value="No"]').checked = true; // Auto-fill related question
-            }
-        }
-
-        // Auto-fill family history
-        function updateFamilyHistory() {
-            const antecedentes = document.querySelector('input[name="antecedentes_respiratorios"]:checked')?.value;
-            // Propagate to other sections if needed (e.g., chronic diseases in Actividad y Reposo)
-        }
-
-        // Auto-fill alcohol-related questions
-        function updateAlcoholRelated() {
-            const alcohol = document.querySelector('input[name="consume_alcohol"]:checked')?.value;
-            // Propagate to other sections (e.g., Modo Autoconcepto)
-        }
-
-        // Update gender-related questions
-        function updateGenderRelated() {
-            const sexo = document.querySelector('select[name="sexo"]').value;
-            if (sexo) {
-                document.querySelectorAll('.gender-related').forEach(el => {
-                    el.value = sexo === 'M' ? 'Hombre' : 'Mujer'; // Auto-fill "Sé quién soy" in Autoconcepto
-                });
-            }
-        }
-
-        // Form submission
-        document.getElementById('assessmentForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-      alert('Formulario enviado.');
-            // Process form data here
-            
         });
-        
-        
-        
+
+        document.getElementById("logout").addEventListener("click", () => {
+            signOut(auth).then(() => {
+                window.location.href = "login.html";
+            }).catch((error) => {
+                console.error("Error al cerrar sesión: ", error);
+            });
+        });
+
+        const form = document.getElementById('assessmentForm');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const user = auth.currentUser;
+            if (!user) {
+                alert("Debes iniciar sesión para enviar el formulario.");
+                return;
+            }
+
+            const formData = new FormData(form);
+            let data = Object.fromEntries(formData);
+
+            // Calcular valores (IMC y PAM)
+            data = calcularValores(data); // Llamada a la función del script.js
+
+            try {
+                await addDoc(collection(db, `users/${user.uid}/valoraciones`), {
+                    ...data,
+                    timestamp: new Date().toISOString()
+                });
+                alert("Valoración enviada con éxito.");
+                form.reset();
+                window.location.href = "historial.html";
+            } catch (error) {
+                console.error("Error al enviar valoración:", error);
+                alert("Error al enviar la valoración.");
+            }
+        });
     </script>
-    <details id="modo-autoconcepto">
-        <summary>2. Modo Autoconcepto</summary>
-        <div class="question"><label>¿Cómo te sientes físicamente? <input type="text" name="sentimiento_fisico"></label></div>
-        <div class="question"><label>¿Sé quién soy? <input type="text" name="se_quien_soy" readonly></label></div>
-        <div class="question"><label>¿Me comporto como tal? <input type="text" name="comporto_como" readonly></label></div>
-    </details>
+    <script src="script.js" defer></script>
 </body>
 </html>

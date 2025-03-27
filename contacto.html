@@ -30,6 +30,13 @@
                 // Si no hay usuario autenticado, redirigir a login.html
                 window.location.href = "login.html";
             }
+            document.getElementById("logout").addEventListener("click", () => {
+    signOut(auth).then(() => {
+        window.location.href = "login.html";
+    }).catch((error) => {
+        console.error("Error al cerrar sesión: ", error);
+    });
+});
         });
     </script>
     
