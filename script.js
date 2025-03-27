@@ -71,7 +71,32 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Calcular valores (IMC y PAM)
+    // Event listeners for dynamic updates
+    if (form) {
+        form.addEventListener('change', (e) => {
+            const target = e.target;
+            if (target.name === 'cambios_respiracion') toggleFollowUp('q1_followup', target.value === 'Sí');
+            if (target.name === 'medicamentos_respiratorios') toggleFollowUp('q3_followup', target.value === 'Sí');
+            if (target.name === 'fuma') {
+                toggleFollowUp('q4_followup', target.value === 'Sí');
+                updateSmokingRelated();
+            }
+            if (target.name === 'antecedentes_respiratorios') {
+                toggleFollowUp('q8_followup', target.value === 'Sí');
+                updateFamilyHistory();
+            }
+            if (target.name === 'suplementos') toggleFollowUp('q14_followup', target.value === 'Sí');
+            if (target.name === 'consume_alcohol') {
+                toggleFollowUp('q12_followup', target.value === 'Sí');
+                updateAlcoholRelated();
+            }
+            if (target.name === 'sexo') updateGenderRelated();
+            if (target.name === 'problemas_respiratorios') calculateFrequency();
+            if (target.name === 'creencias' && target.value === 'Otros') toggleOtrosCreencias();
+        });
+    }
+
+    // Calcular valores y enviar a Firebase (reemplaza localStorage)
     function calcularValores(data) {
         let peso = parseFloat(data.peso) || 0;
         let altura = parseFloat(data.altura) || 0;
@@ -118,30 +143,8 @@ document.addEventListener('DOMContentLoaded', () => {
         return data;
     }
 
-    // Event listeners for dynamic updates and submission
+    // Form submission with Firebase integration
     if (form) {
-        form.addEventListener('change', (e) => {
-            const target = e.target;
-            if (target.name === 'cambios_respiracion') toggleFollowUp('q1_followup', target.value === 'Sí');
-            if (target.name === 'medicamentos_respiratorios') toggleFollowUp('q3_followup', target.value === 'Sí');
-            if (target.name === 'fuma') {
-                toggleFollowUp('q4_followup', target.value === 'Sí');
-                updateSmokingRelated();
-            }
-            if (target.name === 'antecedentes_respiratorios') {
-                toggleFollowUp('q8_followup', target.value === 'Sí');
-                updateFamilyHistory();
-            }
-            if (target.name === 'suplementos') toggleFollowUp('q14_followup', target.value === 'Sí');
-            if (target.name === 'consume_alcohol') {
-                toggleFollowUp('q12_followup', target.value === 'Sí');
-                updateAlcoholRelated();
-            }
-            if (target.name === 'sexo') updateGenderRelated();
-            if (target.name === 'problemas_respiratorios') calculateFrequency();
-            if (target.name === 'creencias' && target.value === 'Otros') toggleOtrosCreencias();
-        });
-
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             const formData = new FormData(form);
@@ -150,8 +153,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // Calcular IMC y PAM
             data = calcularValores(data);
 
-            // Solo logueamos aquí, el envío a Firebase está en el HTML
+            // Firebase integration (esto se maneja en el HTML con el script de Firebase)
             console.log('Datos del formulario:', data);
+            // El envío real a Firebase está en el <script type="module"> de Valoracion_preguntas.html
         });
-    }
-});
+    } 
