@@ -6,10 +6,6 @@
     <title>Historial de Valoraciones</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-<script src="historial.js"></script>
-<body onload="mostrarHistorial()">
-    <div id="historial"></div>
-</body>
 <body>
     <nav> 
         <div class="logo">
@@ -20,6 +16,8 @@
             <li><a href="historial.html">Historial</a></li>
             <li><a href="acerca.html">Acerca de</a></li>
             <li><a href="contacto.html">Contacto</a></li>
+            <li><a href="Valoracion_preguntas.html">Entrevista</a></li>
+            <li><button id="logout" style="cursor:pointer; background:none; border:none; color:white; font-size:16px;">Cerrar Sesión</button></li>
         </ul>
     </nav>
     
@@ -28,10 +26,13 @@
         <ul id="listaHistorial"></ul>
         <button onclick="limpiarHistorial()">🗑️ Borrar Historial</button>
     </div>
+
+    <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
-    
+        import { getFirestore, collection, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
+
         const firebaseConfig = {
             apiKey: "AIzaSyC2_Bftp6pPmQT41MyYMSc6PiYxEAkz9hs",
             authDomain: "valoracion-enfermeria.firebaseapp.com",
@@ -41,47 +42,57 @@
             appId: "1:368639381830:web:253168bfdc4031a9c95547",
             measurementId: "G-YNKHWHMKGB"
         };
-    
+
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-    
+        const db = getFirestore(app);
+
+        // Check authentication state
         onAuthStateChanged(auth, (user) => {
             if (!user) {
-                // Si no hay usuario autenticado, redirigir a login.html
                 window.location.href = "login.html";
+            } else {
+                mostrarHistorial(user.uid); // Pass user ID to fetch their data
             }
         });
-    </script>
-    
-    <script>
-        window.onload = function() {
-            let usuario = localStorage.getItem('usuarioActual') || 'defaultUser';
-            let historial = JSON.parse(localStorage.getItem(`historial_${usuario}`)) || [];
-            let listaHistorial = document.getElementById('listaHistorial');
 
-            if (historial.length > 0) {
-                historial.forEach((valoracion, index) => {
-                    let imcData = clasificarIMC(valoracion.imc);
-                    let listItem = document.createElement('li');
+        // Fetch and display history from Firestore
+        async function mostrarHistorial(userId) {
+            const listaHistorial = document.getElementById('listaHistorial');
+            listaHistorial.innerHTML = ''; // Clear previous content
+
+            try {
+                const querySnapshot = await getDocs(collection(db, `users/${userId}/valoraciones`));
+                if (querySnapshot.empty) {
+                    listaHistorial.innerHTML = "<p>No hay valoraciones registradas.</p>";
+                    return;
+                }
+
+                querySnapshot.forEach((doc) => {
+                    const valoracion = doc.data();
+                    const imcData = clasificarIMC(valoracion.imc || 0);
+                    const listItem = document.createElement('li');
                     listItem.innerHTML = `
-                        <p><strong>${index + 1}. ${valoracion.nombre}</strong></p>
-                        <p><strong>Edad:</strong> ${valoracion.edad} años</p>
-                        <p><strong>Peso:</strong> ${valoracion.peso} kg</p>
-                        <p><strong>Altura:</strong> ${valoracion.altura} m</p>
-                        <p style="color:${imcData.color};"><strong>IMC:</strong> ${valoracion.imc} (${imcData.emoji} ${imcData.clasificacion})</p>
-                        <p><strong>Presión Arterial Media:</strong> ${valoracion.pam}</p>
-                        <p><strong>Estado Neurológico:</strong> ${valoracion.neurologico}</p>
-                        <p><strong>Saturación de Oxígeno:</strong> ${valoracion.respiratorio}%</p>
-                        <p><strong>Movilidad:</strong> ${valoracion.musculo}</p>
-                        <p><strong>Estado de la piel:</strong> ${valoracion.piel}</p>
+                        <p><strong>${valoracion.nombre}</strong></p>
+                        <p><strong>Edad:</strong> ${valoracion.edad || 'N/A'} años</p>
+                        <p><strong>Peso:</strong> ${valoracion.peso || 'N/A'} kg</p>
+                        <p><strong>Altura:</strong> ${valoracion.altura || 'N/A'} m</p>
+                        <p style="color:${imcData.color};"><strong>IMC:</strong> ${valoracion.imc || 'N/A'} (${imcData.emoji} ${imcData.clasificacion})</p>
+                        <p><strong>Presión Arterial Media:</strong> ${valoracion.pam || 'N/A'}</p>
+                        <p><strong>Estado Neurológico:</strong> ${valoracion.neurologico || 'N/A'}</p>
+                        <p><strong>Saturación de Oxígeno:</strong> ${valoracion.respiratorio || 'N/A'}%</p>
+                        <p><strong>Movilidad:</strong> ${valoracion.musculo || 'N/A'}</p>
+                        <p><strong>Estado de la piel:</strong> ${valoracion.piel || 'N/A'}</p>
                     `;
                     listaHistorial.appendChild(listItem);
                 });
-            } else {
-                listaHistorial.innerHTML = "<p>No hay valoraciones registradas.</p>";
+            } catch (error) {
+                console.error("Error al cargar historial:", error);
+                listaHistorial.innerHTML = "<p>Error al cargar el historial.</p>";
             }
-        };
+        }
 
+        // Classify IMC
         function clasificarIMC(imc) {
             if (imc < 18.5) return { clasificacion: "Bajo peso", color: "blue", emoji: "🔵" };
             if (imc < 24.9) return { clasificacion: "Peso saludable", color: "green", emoji: "🟢" };
@@ -90,38 +101,27 @@
             if (imc < 39.9) return { clasificacion: "Obesidad II", color: "purple", emoji: "🟣" };
             return { clasificacion: "Obesidad III", color: "darkviolet", emoji: "🟪" };
         }
-        function mostrarHistorial() {
-    let historial = JSON.parse(localStorage.getItem('historial')) || [];
-    let historialContainer = document.getElementById('historial-container');
 
-    historialContainer.innerHTML = ""; // Limpiar contenido previo
+        // Clear history
+        async function limpiarHistorial() {
+            const user = auth.currentUser;
+            if (!user) return;
 
-    if (historial.length === 0) {
-        historialContainer.innerHTML = "<p>No hay registros en el historial.</p>";
-        return;
-    }
+            if (confirm("¿Estás seguro de borrar todo el historial?")) {
+                try {
+                    const querySnapshot = await getDocs(collection(db, `users/${user.uid}/valoraciones`));
+                    const deletePromises = querySnapshot.docs.map((docSnapshot) => deleteDoc(doc(db, `users/${user.uid}/valoraciones`, docSnapshot.id)));
+                    await Promise.all(deletePromises);
+                    mostrarHistorial(user.uid);
+                } catch (error) {
+                    console.error("Error al borrar historial:", error);
+                    alert("Error al borrar el historial.");
+                }
+            }
+        }
 
-    historial.forEach((item, index) => {
-        let div = document.createElement('div');
-        div.classList.add('historial-item');
-
-        div.innerHTML = `
-            <p><strong>Nombre:</strong> ${item.nombre}</p>
-            <p><strong>Edad:</strong> ${item.edad} años</p>
-            <p><strong>Peso:</strong> ${item.peso} kg</p>
-            <p><strong>Altura:</strong> ${item.altura} m</p>
-            <p style="color:${item.imcColor};"><strong>IMC:</strong> ${item.imc} ${item.imcEmoji} (${item.imcClasificacion})</p>
-            <p><strong>Presión Arterial Media:</strong> ${item.pam}</p>
-            <hr>
-        `;
-
-        historialContainer.appendChild(div);
-    });
-}
-
-// Ejecutar la función al cargar la página
-document.addEventListener("DOMContentLoaded", mostrarHistorial);
-
+        // Expose limpiarHistorial to global scope
+        window.limpiarHistorial = limpiarHistorial;
     </script>
 </body>
 </html>
