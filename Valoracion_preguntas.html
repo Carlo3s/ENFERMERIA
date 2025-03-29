@@ -170,6 +170,7 @@
         const db = getFirestore(app);
 
         onAuthStateChanged(auth, (user) => {
+            console.log("Usuario autenticado:", user);
             if (!user) {
                 window.location.href = "login.html";
             }
