@@ -169,14 +169,12 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Verificar autenticación al cargar la página
         onAuthStateChanged(auth, (user) => {
             if (!user) {
                 window.location.href = "login.html";
             }
         });
 
-        // Manejar el cierre de sesión
         document.getElementById("logout").addEventListener("click", () => {
             signOut(auth).then(() => {
                 window.location.href = "login.html";
@@ -186,10 +184,9 @@
             });
         });
 
-        // Manejar el envío del formulario
         const form = document.getElementById('assessmentForm');
         form.addEventListener('submit', async (e) => {
-            e.preventDefault(); // Prevenir el comportamiento por defecto del formulario
+            e.preventDefault();
 
             const user = auth.currentUser;
             if (!user) {
@@ -201,7 +198,7 @@
             const formData = new FormData(form);
             let data = Object.fromEntries(formData);
 
-            // Calcular IMC y PAM
+            // Calcular IMC y clasificar con emojis
             let peso = parseFloat(data.peso) || 0;
             let altura = parseFloat(data.altura) || 0;
             let ps = parseInt(data.ps) || 0;
@@ -209,27 +206,33 @@
 
             if (peso && altura) {
                 data.imc = (peso / (altura * altura)).toFixed(2);
-                data.imcClasificacion = "";
-                if (data.imc < 18.5) data.imcClasificacion = "Por debajo del peso normal";
-                else if (data.imc < 24.9) data.imcClasificacion = "Peso saludable";
-                else if (data.imc < 29.9) data.imcClasificacion = "Sobrepeso";
-                else if (data.imc < 34.9) data.imcClasificacion = "Obesidad I";
-                else if (data.imc < 39.9) data.imcClasificacion = "Obesidad II";
-                else data.imcClasificacion = "Obesidad III";
+                if (data.imc < 18.5) {
+                    data.semaforo = "🔵 Por debajo del peso normal";
+                } else if (data.imc <= 24.9) {
+                    data.semaforo = "🟢 Peso saludable";
+                } else if (data.imc <= 29.9) {
+                    data.semaforo = "🟠 Sobrepeso";
+                } else if (data.imc <= 34.9) {
+                    data.semaforo = "🔴 Obesidad I";
+                } else if (data.imc <= 39.9) {
+                    data.semaforo = "🟣 Obesidad II";
+                } else {
+                    data.semaforo = "🟪 Obesidad III";
+                }
+                data.paciente = data.nombre;
             }
 
             if (ps && pd) {
                 data.pam = (((2 * pd) + ps) / 3).toFixed(2);
             }
 
-            // Manejar múltiples valores (checkboxes)
             data.roles = Array.from(document.querySelectorAll('input[name="roles"]:checked')).map(input => input.value);
             data.creencias = Array.from(document.querySelectorAll('input[name="creencias"]:checked')).map(input => input.value);
-
             data.timestamp = new Date().toISOString();
+            data.userId = user.uid;
 
             try {
-                await addDoc(collection(db, `users/${user.uid}/valoraciones`), data);
+                await addDoc(collection(db, "valoraciones"), data);
                 alert("Valoración guardada con éxito.");
                 form.reset();
                 window.location.href = "historial.html";
@@ -239,7 +242,6 @@
             }
         });
 
-        // Show/hide follow-up questions
         function toggleFollowUp(elementId, show) {
             const element = document.getElementById(elementId);
             if (element) {
@@ -247,19 +249,17 @@
             }
         }
 
-        // Calculate frequency of respiratory issues
         function calculateFrequency() {
             const problemas = document.querySelector('input[name="problemas_respiratorios"]').value;
             const resultado = document.getElementById('frecuencia_resultado');
             if (problemas > 0) {
                 const frecuenciaMensual = (problemas / 6).toFixed(2);
-                resultado.textContent = ` (Aproximadamente ${frecuenciaMensual} veces por mes)`;
+                resultado.textContent = `(Aproximadamente ${frecuenciaMensual} veces por mes)`;
             } else {
                 resultado.textContent = '';
             }
         }
 
-        // Auto-fill smoking-related questions
         function updateSmokingRelated() {
             const fuma = document.querySelector('input[name="fuma"]:checked')?.value;
             if (fuma === 'No') {
@@ -270,19 +270,10 @@
             }
         }
 
-        // Auto-fill family history
-        function updateFamilyHistory() {
-            const antecedentes = document.querySelector('input[name="antecedentes_respiratorios"]:checked')?.value;
-            // No hace nada por ahora, pero está listo para futuras implementaciones
-        }
+        function updateFamilyHistory() {}
 
-        // Auto-fill alcohol-related questions
-        function updateAlcoholRelated() {
-            const alcohol = document.querySelector('input[name="consume_alcohol"]:checked')?.value;
-            // No hace nada por ahora, pero está listo para futuras implementaciones
-        }
+        function updateAlcoholRelated() {}
 
-        // Update gender-related questions
         function updateGenderRelated() {
             const sexo = document.querySelector('select[name="sexo"]').value;
             if (sexo) {
@@ -292,7 +283,6 @@
             }
         }
 
-        // Handle "Otros" in spiritual beliefs
         function toggleOtrosCreencias() {
             const otrosCheckbox = document.querySelector('input[name="creencias"][value="Otros"]');
             const otrosInput = document.getElementById('creencias_otros');

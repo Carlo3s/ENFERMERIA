@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Historial de Valoraciones</title>
     <link rel="stylesheet" href="styles.css">
+    <!-- Incluir jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
     <nav>
@@ -32,6 +34,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
     
         const firebaseConfig = {
             apiKey: "AIzaSyC2_Bftp6pPmQT41MyYMSc6PiYxEAkz9hs",
@@ -45,10 +48,13 @@
     
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        const db = getFirestore(app);
     
         onAuthStateChanged(auth, (user) => {
             if (!user) {
                 window.location.href = "login.html";
+            } else {
+                mostrarHistorial();
             }
         });
     
@@ -59,48 +65,224 @@
                 console.error("Error al cerrar sesión: ", error);
             });
         });
-    </script>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            mostrarHistorial();
-        });
-
-        function mostrarHistorial() {
+        async function mostrarHistorial() {
             const historialDiv = document.getElementById("historial");
-            const historial = JSON.parse(localStorage.getItem("valoraciones")) || [];
+            try {
+                const querySnapshot = await getDocs(collection(db, "valoraciones"));
+                const historial = [];
 
-            if (historial.length === 0) {
-                historialDiv.innerHTML = "<p>No hay valoraciones guardadas.</p>";
-                return;
+                querySnapshot.forEach((doc) => {
+                    historial.push(doc.data());
+                });
+
+                if (historial.length === 0) {
+                    historialDiv.innerHTML = "<p>No hay valoraciones guardadas.</p>";
+                    return;
+                }
+
+                historial.forEach((item, index) => {
+                    const div = document.createElement("div");
+                    div.classList.add("valoracion");
+                    div.innerHTML = `
+                        <h3>Valoración ${index + 1}</h3>
+                        <p>Paciente: ${item.paciente}</p>
+                        <p>Resultado: <span class="semaforo">${item.semaforo}</span></p>
+                        <p>IMC: ${item.imc || 'No calculado'}</p>
+                        <p>PAM: ${item.pam || 'No calculado'} mmHg</p>
+                    `;
+                    historialDiv.appendChild(div);
+                });
+            } catch (error) {
+                console.error("Error al cargar historial: ", error);
+                historialDiv.innerHTML = "<p>Error al cargar el historial.</p>";
             }
-
-            historial.forEach((item, index) => {
-                const div = document.createElement("div");
-                div.classList.add("valoracion");
-                div.innerHTML = `<h3>Valoración ${index + 1}</h3>
-                                 <p>Paciente: ${item.paciente}</p>
-                                 <p>Resultado: <span class="${item.semaforo}">${item.semaforo.toUpperCase()}</span></p>`;
-                historialDiv.appendChild(div);
-            });
         }
 
-        function exportarPDF() {
-            const historial = JSON.parse(localStorage.getItem("valoraciones")) || [];
-            let contenido = "Historial de Valoraciones\n\n";
-            historial.forEach((item, index) => {
-                contenido += `Valoración ${index + 1}\nPaciente: ${item.paciente}\nResultado: ${item.semaforo.toUpperCase()}\n\n`;
+        async function exportarPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            let y = 10;
+
+            doc.setFontSize(16);
+            doc.text("Historial de Valoraciones", 10, y);
+            y += 10;
+
+            const querySnapshot = await getDocs(collection(db, "valoraciones"));
+            let index = 1;
+
+            querySnapshot.forEach((doc) => {
+                const item = doc.data();
+                doc.setFontSize(12);
+                doc.text(`Valoración ${index}`, 10, y);
+                y += 5;
+                doc.text(`Paciente: ${item.paciente}`, 10, y);
+                y += 5;
+                doc.text(`Resultado: ${item.semaforo}`, 10, y);
+                y += 5;
+                doc.text(`IMC: ${item.imc || 'No calculado'}`, 10, y);
+                y += 5;
+                doc.text(`PAM: ${item.pam || 'No calculado'} mmHg`, 10, y);
+                y += 5;
+
+                // Datos de Identificación
+                doc.text("Datos de Identificación:", 10, y);
+                y += 5;
+                doc.text(`Nombre: ${item.nombre}`, 10, y);
+                y += 5;
+                doc.text(`Edad: ${item.edad}`, 10, y);
+                y += 5;
+                doc.text(`Sexo: ${item.sexo}`, 10, y);
+                y += 5;
+                doc.text(`Peso: ${item.peso} kg`, 10, y);
+                y += 5;
+                doc.text(`Altura: ${item.altura} m`, 10, y);
+                y += 5;
+                doc.text(`Presión Sistólica: ${item.ps || 'No ingresado'} mmHg`, 10, y);
+                y += 5;
+                doc.text(`Presión Diastólica: ${item.pd || 'No ingresado'} mmHg`, 10, y);
+                y += 5;
+
+                // Modo Fisiológico
+                doc.text("Modo Fisiológico:", 10, y);
+                y += 5;
+                doc.text("Necesidad de Oxigenación:", 10, y);
+                y += 5;
+                doc.text(`¿Ha tenido cambios en su respiración? ${item.cambios_respiracion || 'No contestado'}`, 10, y);
+                y += 5;
+                if (item.cambios_respiracion_detalle) {
+                    doc.text(`Especificar: ${item.cambios_respiracion_detalle}`, 10, y);
+                    y += 5;
+                }
+                doc.text(`Problemas respiratorios (6 meses): ${item.problemas_respiratorios || '0'}`, 10, y);
+                y += 5;
+                doc.text(`¿Toma medicamentos para problemas respiratorios? ${item.medicamentos_respiratorios || 'No contestado'}`, 10, y);
+                y += 5;
+                if (item.medicamentos_detalle) {
+                    doc.text(`Especificar: ${item.medicamentos_detalle}`, 10, y);
+                    y += 5;
+                }
+                doc.text(`¿Fuma? ${item.fuma || 'No contestado'}`, 10, y);
+                y += 5;
+                if (item.cigarrillos_dia) {
+                    doc.text(`Cigarrillos al día: ${item.cigarrillos_dia}`, 10, y);
+                    y += 5;
+                }
+                if (item.fuma_historia) {
+                    doc.text(`¿Ha consumido tabaco alguna vez? ${item.fuma_historia}`, 10, y);
+                    y += 5;
+                }
+                doc.text(`¿Humo o contaminantes en su ambiente? ${item.humo_ambiente || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`¿Familiares con problemas respiratorios? ${item.antecedentes_respiratorios || 'No contestado'}`, 10, y);
+                y += 5;
+                if (item.antecedentes_detalle) {
+                    doc.text(`Especificar: ${item.antecedentes_detalle}`, 10, y);
+                    y += 5;
+                }
+
+                doc.text("Necesidad de Nutrición:", 10, y);
+                y += 5;
+                doc.text(`Alimentos que consume: ${item.alimentos_hogar || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`¿Consume suplementos? ${item.suplementos || 'No contestado'}`, 10, y);
+                y += 5;
+                if (item.suplementos_detalle) {
+                    doc.text(`¿Cuáles? ${item.suplementos_detalle}`, 10, y);
+                    y += 5;
+                }
+                doc.text(`Comidas al día: ${item.comidas_dia || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`¿Problemas para comer? ${item.problemas_comer || 'No contestado'}`, 10, y);
+                y += 5;
+
+                doc.text("Necesidad de Eliminación:", 10, y);
+                y += 5;
+                doc.text(`Frecuencia de orina (24 hrs): ${item.frecuencia_orina || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`¿Cambio en patrón de orina? ${item.cambio_orina || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`Frecuencia de evacuación (24 hrs): ${item.frecuencia_evacuacion || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`¿Cambio en patrón de evacuación? ${item.cambio_evacuacion || 'No contestado'}`, 10, y);
+                y += 5;
+
+                doc.text("Necesidad de Actividad y Reposo:", 10, y);
+                y += 5;
+                doc.text(`Actividades diarias: ${item.actividades_diarias || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`Horas de sueño (24 hrs): ${item.horas_sueno || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`¿Consume alcohol? ${item.consume_alcohol || 'No contestado'}`, 10, y);
+                y += 5;
+                if (item.frecuencia_alcohol) {
+                    doc.text(`Frecuencia: ${item.frecuencia_alcohol}`, 10, y);
+                    y += 5;
+                }
+                doc.text(`¿Realiza ejercicio? ${item.ejercicio || 'No contestado'}`, 10, y);
+                y += 5;
+
+                // Modo Autoconcepto
+                doc.text("Modo Autoconcepto:", 10, y);
+                y += 5;
+                doc.text(`¿Sé quién soy? ${item.se_quien_soy || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`¿Cómo te sientes físicamente? ${item.sentimiento_fisico || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`¿Cómo te describes? ${item.descripcion_personal || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`Creencias espirituales: ${item.creencias?.join(", ") || 'No contestado'}`, 10, y);
+                y += 5;
+                if (item.creencias_otros) {
+                    doc.text(`Otros: ${item.creencias_otros}`, 10, y);
+                    y += 5;
+                }
+
+                // Modo Rol
+                doc.text("Modo Rol:", 10, y);
+                y += 5;
+                doc.text(`Roles: ${item.roles?.join(", ") || 'No contestado'}`, 10, y);
+                y += 5;
+                if (item.roles_otro) {
+                    doc.text(`Otro: ${item.roles_otro}`, 10, y);
+                    y += 5;
+                }
+                doc.text(`Afectación del rol de paciente: ${item.afectacion_rol || 'No contestado'}`, 10, y);
+                y += 5;
+
+                // Modo Interdependencia
+                doc.text("Modo Interdependencia:", 10, y);
+                y += 5;
+                doc.text(`Seres significativos:`, 10, y);
+                y += 5;
+                doc.text(`1. ${item.significativos_1 || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`2. ${item.significativos_2 || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`3. ${item.significativos_3 || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`Red de apoyo: ${item.red_apoyo || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`Relación con estas personas: ${item.relacion_personas || 'No contestado'}`, 10, y);
+                y += 10;
+
+                index++;
+                if (y > 270) {
+                    doc.addPage();
+                    y = 10;
+                }
             });
-            
-            const blob = new Blob([contenido], { type: "application/pdf" });
-            const enlace = document.createElement("a");
-            enlace.href = URL.createObjectURL(blob);
-            enlace.download = "historial_valoraciones.pdf";
-            enlace.click();
+
+            doc.save("historial_valoraciones.pdf");
         }
 
-        function exportarJSON() {
-            const historial = JSON.parse(localStorage.getItem("valoraciones")) || [];
+        async function exportarJSON() {
+            const querySnapshot = await getDocs(collection(db, "valoraciones"));
+            const historial = [];
+            querySnapshot.forEach((doc) => {
+                historial.push(doc.data());
+            });
+
             const blob = new Blob([JSON.stringify(historial, null, 2)], { type: "application/json" });
             const enlace = document.createElement("a");
             enlace.href = URL.createObjectURL(blob);
