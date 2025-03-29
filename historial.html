@@ -4,62 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Historial de Valoraciones</title>
+    <link rel="stylesheet" href="styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-        }
-        .header {
-            background-color: #005B96;
-            color: white;
-            padding: 10px;
-            text-align: center;
-            font-size: 24px;
-            font-weight: bold;
-        }
-        .header img {
-            height: 40px;
-            vertical-align: middle;
-            margin-right: 10px;
-        }
-        .nav {
-            background-color: #005B96;
-            padding: 10px;
-            text-align: center;
-        }
-        .nav a, .nav button {
-            color: white;
-            margin: 0 15px;
-            text-decoration: none;
-            background: none;
-            border: none;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        .nav a:hover, .nav button:hover {
-            text-decoration: underline;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 20px auto;
-            text-align: center;
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .container h2 {
-            font-size: 20px;
-            margin-bottom: 30px;
-        }
         .category-grid {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             gap: 30px;
+            margin-bottom: 20px;
         }
         .category {
             width: 120px;
@@ -75,27 +28,21 @@
             font-size: 14px;
         }
         .category .circle {
-            width: 20px;
-            height: 20px;
+            width: 30px; /* Aumenté el tamaño para que coincida con la imagen */
+            height: 30px;
             border-radius: 50%;
             display: inline-block;
             position: relative;
-            top: -60px;
-            left: 40px;
+            top: -70px; /* Ajusté la posición para que se alinee mejor con la carpeta */
+            left: 35px; /* Ajusté la posición horizontal */
+            border: 2px solid #000; /* Agregué un borde negro para que coincida con la imagen */
         }
-        .historial-list {
-            margin-top: 20px;
-            text-align: left;
-            display: none;
-            max-width: 800px;
-            margin: 20px auto;
-        }
-        .historial-item {
+        .valoracion {
             border: 1px solid #ccc;
             padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
+            margin: 5px 0;
             background-color: white;
+            border-radius: 5px;
         }
         button {
             background-color: #007bff;
@@ -109,21 +56,30 @@
         button:hover {
             background-color: #0056b3;
         }
+        .historial-list {
+            margin-top: 20px;
+            text-align: left;
+            display: none;
+            max-width: 800px;
+            margin: 20px auto;
+        }
     </style>
 </head>
 <body>
-    <div class="header">
-        <span>VALORACIÓN DE ENFERMERÍA</span>
-    </div>
-    <div class="nav">
-        <a href="index.html">Inicio</a>
-        <a href="historial.html">Historial</a>
-        <a href="acerca.html">Acerca de</a>
-        <a href="contacto.html">Contacto</a>
-        <a href="Valoracion_preguntas.html">Entrevista</a>
-        <a href="ayuda.html">Recursos</a>
-        <button id="logout">Cerrar Sesión</button>
-    </div>
+    <nav>
+        <div class="logo">
+            <a href="index.html"><img src="logo.png" alt="Logo" id="logo"></a>
+        </div>
+        <ul>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="historial.html">Historial</a></li>
+            <li><a href="acerca.html">Acerca de</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+            <li><a href="Valoracion_preguntas.html">Entrevista</a></li>
+            <li><a href="ayuda.html">Recursos</a></li>
+            <li><button id="logout">Cerrar Sesión</button></li>
+        </ul>
+    </nav>
     
     <div class="container">
         <h2>Historial de Valoraciones</h2>
@@ -190,14 +146,17 @@
 
         onAuthStateChanged(auth, (user) => {
             if (!user) {
+                console.log("Usuario no autenticado, redirigiendo a login.html");
                 window.location.href = "login.html";
             } else {
+                console.log("Usuario autenticado, cargando historial...");
                 cargarHistorial();
             }
         });
     
         document.getElementById("logout").addEventListener("click", () => {
             signOut(auth).then(() => {
+                console.log("Sesión cerrada, redirigiendo a login.html");
                 window.location.href = "login.html";
             }).catch((error) => {
                 console.error("Error al cerrar sesión: ", error);
@@ -206,15 +165,21 @@
 
         async function cargarHistorial() {
             try {
+                console.log("Cargando historial desde Firebase...");
                 const querySnapshot = await getDocs(collection(db, "valoraciones"));
                 historialData = [];
 
                 querySnapshot.forEach((doc) => {
-                    historialData.push(doc.data());
+                    const data = doc.data();
+                    console.log("Valoración encontrada: ", data);
+                    historialData.push(data);
                 });
 
                 if (historialData.length === 0) {
+                    console.log("No se encontraron valoraciones.");
                     document.getElementById("historial-items").innerHTML = "<p>No hay valoraciones guardadas.</p>";
+                } else {
+                    console.log("Valoraciones cargadas: ", historialData);
                 }
             } catch (error) {
                 console.error("Error al cargar historial: ", error);
@@ -223,6 +188,7 @@
         }
 
         function showHistorial(semaforo) {
+            console.log("Carpeta clicada, mostrando historial para: ", semaforo);
             const historialList = document.getElementById("historial-list");
             const historialTitle = document.getElementById("historial-title");
             const historialItems = document.getElementById("historial-items");
@@ -233,8 +199,10 @@
 
             const items = historialData.filter(item => item.semaforo === semaforo);
             if (items.length === 0) {
+                console.log("No hay historiales para esta categoría: ", semaforo);
                 historialItems.innerHTML = "<p>No hay historiales disponibles para esta categoría.</p>";
             } else {
+                console.log("Historiales encontrados para esta categoría: ", items);
                 // Botón para descargar PDF de esta categoría
                 const downloadButton = document.createElement("button");
                 downloadButton.textContent = `Descargar PDF (${semaforo.split(" ").slice(1).join(" ")})`;
@@ -244,7 +212,7 @@
                 // Mostrar las valoraciones de esta categoría
                 items.forEach((item, index) => {
                     const div = document.createElement("div");
-                    div.className = "historial-item";
+                    div.className = "valoracion";
                     div.innerHTML = `
                         <h4>Valoración ${index + 1}</h4>
                         <p><strong>Paciente:</strong> ${item.paciente}</p>
@@ -281,15 +249,15 @@
 
                 doc.text("Datos de Identificación:", 10, y);
                 y += 5;
-                doc.text(`Nombre: ${item.nombre}`, 10, y);
+                doc.text(`Nombre: ${item.nombre || 'No ingresado'}`, 10, y);
                 y += 5;
-                doc.text(`Edad: ${item.edad}`, 10, y);
+                doc.text(`Edad: ${item.edad || 'No ingresado'}`, 10, y);
                 y += 5;
-                doc.text(`Sexo: ${item.sexo}`, 10, y);
+                doc.text(`Sexo: ${item.sexo || 'No ingresado'}`, 10, y);
                 y += 5;
-                doc.text(`Peso: ${item.peso} kg`, 10, y);
+                doc.text(`Peso: ${item.peso || 'No ingresado'} kg`, 10, y);
                 y += 5;
-                doc.text(`Altura: ${item.altura} m`, 10, y);
+                doc.text(`Altura: ${item.altura || 'No ingresado'} m`, 10, y);
                 y += 5;
                 doc.text(`Presión Sistólica: ${item.ps || 'No ingresado'} mmHg`, 10, y);
                 y += 5;
