@@ -4,15 +4,62 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Historial de Valoraciones</title>
-    <link rel="stylesheet" href="styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background-color: #005B96;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .header img {
+            height: 40px;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+        .nav {
+            background-color: #005B96;
+            padding: 10px;
+            text-align: center;
+        }
+        .nav a, .nav button {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .nav a:hover, .nav button:hover {
+            text-decoration: underline;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            text-align: center;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .container h2 {
+            font-size: 20px;
+            margin-bottom: 30px;
+        }
         .category-grid {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             gap: 30px;
-            margin-bottom: 20px;
         }
         .category {
             width: 120px;
@@ -36,12 +83,19 @@
             top: -60px;
             left: 40px;
         }
-        .valoracion {
+        .historial-list {
+            margin-top: 20px;
+            text-align: left;
+            display: none;
+            max-width: 800px;
+            margin: 20px auto;
+        }
+        .historial-item {
             border: 1px solid #ccc;
             padding: 10px;
-            margin: 5px 0;
-            background-color: white;
+            margin-bottom: 10px;
             border-radius: 5px;
+            background-color: white;
         }
         button {
             background-color: #007bff;
@@ -55,30 +109,21 @@
         button:hover {
             background-color: #0056b3;
         }
-        .historial-list {
-            margin-top: 20px;
-            text-align: left;
-            display: none;
-            max-width: 800px;
-            margin: 20px auto;
-        }
     </style>
 </head>
 <body>
-    <nav>
-        <div class="logo">
-            <a href="index.html"><img src="logo.png" alt="Logo" id="logo"></a>
-        </div>
-        <ul>
-            <li><a href="index.html">Inicio</a></li>
-            <li><a href="historial.html">Historial</a></li>
-            <li><a href="acerca.html">Acerca de</a></li>
-            <li><a href="contacto.html">Contacto</a></li>
-            <li><a href="Valoracion_preguntas.html">Entrevista</a></li>
-            <li><a href="ayuda.html">Recursos</a></li>
-            <li><button id="logout">Cerrar Sesión</button></li>
-        </ul>
-    </nav>
+    <div class="header">
+        <span>VALORACIÓN DE ENFERMERÍA</span>
+    </div>
+    <div class="nav">
+        <a href="index.html">Inicio</a>
+        <a href="historial.html">Historial</a>
+        <a href="acerca.html">Acerca de</a>
+        <a href="contacto.html">Contacto</a>
+        <a href="Valoracion_preguntas.html">Entrevista</a>
+        <a href="ayuda.html">Recursos</a>
+        <button id="logout">Cerrar Sesión</button>
+    </div>
     
     <div class="container">
         <h2>Historial de Valoraciones</h2>
@@ -199,7 +244,7 @@
                 // Mostrar las valoraciones de esta categoría
                 items.forEach((item, index) => {
                     const div = document.createElement("div");
-                    div.classList.add("valoracion");
+                    div.className = "historial-item";
                     div.innerHTML = `
                         <h4>Valoración ${index + 1}</h4>
                         <p><strong>Paciente:</strong> ${item.paciente}</p>
