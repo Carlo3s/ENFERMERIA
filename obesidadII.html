@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>obesidad II</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        .valoracion {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 5px 0;
+            background-color: white;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 5px 0;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .historial-list {
+            margin-top: 20px;
+            text-align: left;
+            max-width: 800px;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">
+            <a href="index.html"><img src="logo.png" alt="Logo" id="logo"></a>
+        </div>
+        <ul>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="historial.html">Historial</a></li>
+            <li><a href="acerca.html">Acerca de</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+            <li><a href="Valoracion_preguntas.html">Entrevista</a></li>
+            <li><a href="ayuda.html">Recursos</a></li>
+            <li><button id="logout">Cerrar Sesión</button></li>
+        </ul>
+    </nav>
+    
+    <div class="container">
+        <h2>Historial - obesidad II</h2>
+        <div class="historial-list" id="historial-list">
+            <h3>Historiales - - obesidad II</h3>
+            <div id="historial-items"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
+    
+        const firebaseConfig = {
+            apiKey: "AIzaSyC2_Bftp6pPmQT41MyYMSc6PiYxEAkz9hs",
+            authDomain: "valoracion-enfermeria.firebaseapp.com",
+            projectId: "valoracion-enfermeria",
+            storageBucket: "valoracion-enfermeria.appspot.com",
+            messagingSenderId: "368639381830",
+            appId: "1:368639381830:web:253168bfdc4031a9c95547",
+            measurementId: "G-YNKHWHMKGB"
+        };
+    
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+    
+        let historialData = [];
+        const semaforo = "🟣 Obesidad II"; // Categoría específica para este archivo
+
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                console.log("Usuario no autenticado, redirigiendo a login.html");
+                window.location.href = "login.html";
+            } else {
+                console.log("Usuario autenticado, cargando historial...");
+                cargarHistorial();
+            }
+        });
+    
+        document.getElementById("logout").addEventListener("click", () => {
+            signOut(auth).then(() => {
+                console.log("Sesión cerrada, redirigiendo a login.html");
+                window.location.href = "login.html";
+            }).catch((error) => {
+                console.error("Error al cerrar sesión: ", error);
+            });
+        });
+
+        async function cargarHistorial() {
+            try {
+                console.log("Cargando historial desde Firebase...");
+                const querySnapshot = await getDocs(collection(db, "valoraciones"));
+                historialData = [];
+
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    console.log("Valoración encontrada: ", data);
+                    historialData.push(data);
+                });
+
+                mostrarHistorial();
+            } catch (error) {
+                console.error("Error al cargar historial: ", error);
+                document.getElementById("historial-items").innerHTML = "<p>Error al cargar el historial.</p>";
+            }
+        }
+
+        function mostrarHistorial() {
+            const historialItems = document.getElementById("historial-items");
+
+            const items = historialData.filter(item => item.semaforo === semaforo);
+            if (items.length === 0) {
+                console.log("No hay historiales para esta categoría: ", semaforo);
+                historialItems.innerHTML = "<p>No hay historiales disponibles para esta categoría.</p>";
+            } else {
+                console.log("Historiales encontrados para esta categoría: ", items);
+                // Botón para descargar PDF de esta categoría
+                const downloadButton = document.createElement("button");
+                downloadButton.textContent = `Descargar PDF (Obesidad II)`;
+                downloadButton.onclick = () => exportarPDF(items, "Obesidad II");
+                historialItems.appendChild(downloadButton);
+
+                // Mostrar las valoraciones de esta categoría
+                items.forEach((item, index) => {
+                    const div = document.createElement("div");
+                    div.className = "valoracion";
+                    div.innerHTML = `
+                        <h4>Valoración ${index + 1}</h4>
+                        <p><strong>Paciente:</strong> ${item.paciente}</p>
+                        <p><strong>Resultado:</strong> ${item.semaforo}</p>
+                        <p><strong>IMC:</strong> ${item.imc || 'No calculado'}</p>
+                        <p><strong>PAM:</strong> ${item.pam || 'No calculado'} mmHg</p>
+                    `;
+                    historialItems.appendChild(div);
+                });
+            }
+        }
+
+        async function exportarPDF(items, categoryName) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            let y = 10;
+
+            doc.setFontSize(16);
+            doc.text(`Historial de Valoraciones - ${categoryName}`, 10, y);
+            y += 10;
+
+            items.forEach((item, index) => {
+                doc.setFontSize(12);
+                doc.text(`Valoración ${index + 1}`, 10, y);
+                y += 5;
+                doc.text(`Paciente: ${item.paciente}`, 10, y);
+                y += 5;
+                doc.text(`Resultado: ${item.semaforo}`, 10, y);
+                y += 5;
+                doc.text(`IMC: ${item.imc || 'No calculado'}`, 10, y);
+                y += 5;
+                doc.text(`PAM: ${item.pam || 'No calculado'} mmHg`, 10, y);
+                y += 5;
+
+                doc.text("Datos de Identificación:", 10, y);
+                y += 5;
+                doc.text(`Nombre: ${item.nombre || 'No ingresado'}`, 10, y);
+                y += 5;
+                doc.text(`Edad: ${item.edad || 'No ingresado'}`, 10, y);
+                y += 5;
+                doc.text(`Sexo: ${item.sexo || 'No ingresado'}`, 10, y);
+                y += 5;
+                doc.text(`Peso: ${item.peso || 'No ingresado'} kg`, 10, y);
+                y += 5;
+                doc.text(`Altura: ${item.altura || 'No ingresado'} m`, 10, y);
+                y += 5;
+                doc.text(`Presión Sistólica: ${item.ps || 'No ingresado'} mmHg`, 10, y);
+                y += 5;
+                doc.text(`Presión Diastólica: ${item.pd || 'No ingresado'} mmHg`, 10, y);
+                y += 5;
+
+                doc.text("Modo Fisiológico:", 10, y);
+                y += 5;
+                doc.text("Necesidad de Oxigenación:", 10, y);
+                y += 5;
+                doc.text(`¿Ha tenido cambios en su respiración? ${item.cambios_respiracion || 'No contestado'}`, 10, y);
+                y += 5;
+                if (item.cambios_respiracion_detalle) {
+                    doc.text(`Especificar: ${item.cambios_respiracion_detalle}`, 10, y);
+                    y += 5;
+                }
+                doc.text(`Problemas respiratorios (6 meses): ${item.problemas_respiratorios || '0'}`, 10, y);
+                y += 5;
+                doc.text(`¿Toma medicamentos para problemas respiratorios? ${item.medicamentos_respiratorios || 'No contestado'}`, 10, y);
+                y += 5;
+                if (item.medicamentos_detalle) {
+                    doc.text(`Especificar: ${item.medicamentos_detalle}`, 10, y);
+                    y += 5;
+                }
+                doc.text(`¿Fuma? ${item.fuma || 'No contestado'}`, 10, y);
+                y += 5;
+                if (item.cigarrillos_dia) {
+                    doc.text(`Cigarrillos al día: ${item.cigarrillos_dia}`, 10, y);
+                    y += 5;
+                }
+                if (item.fuma_historia) {
+                    doc.text(`¿Ha consumido tabaco alguna vez? ${item.fuma_historia}`, 10, y);
+                    y += 5;
+                }
+                doc.text(`¿Humo o contaminantes en su ambiente? ${item.humo_ambiente || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`¿Familiares con problemas respiratorios? ${item.antecedentes_respiratorios || 'No contestado'}`, 10, y);
+                y += 5;
+                if (item.antecedentes_detalle) {
+                    doc.text(`Especificar: ${item.antecedentes_detalle}`, 10, y);
+                    y += 5;
+                }
+
+                doc.text("Necesidad de Nutrición:", 10, y);
+                y += 5;
+                doc.text(`Alimentos que consume: ${item.alimentos_hogar || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`¿Consume suplementos? ${item.suplementos || 'No contestado'}`, 10, y);
+                y += 5;
+                if (item.suplementos_detalle) {
+                    doc.text(`¿Cuáles? ${item.suplementos_detalle}`, 10, y);
+                    y += 5;
+                }
+                doc.text(`Comidas al día: ${item.comidas_dia || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`¿Problemas para comer? ${item.problemas_comer || 'No contestado'}`, 10, y);
+                y += 5;
+
+                doc.text("Necesidad de Eliminación:", 10, y);
+                y += 5;
+                doc.text(`Frecuencia de orina (24 hrs): ${item.frecuencia_orina || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`¿Cambio en patrón de orina? ${item.cambio_orina || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`Frecuencia de evacuación (24 hrs): ${item.frecuencia_evacuacion || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`¿Cambio en patrón de evacuación? ${item.cambio_evacuacion || 'No contestado'}`, 10, y);
+                y += 5;
+
+                doc.text("Necesidad de Actividad y Reposo:", 10, y);
+                y += 5;
+                doc.text(`Actividades diarias: ${item.actividades_diarias || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`Horas de sueño (24 hrs): ${item.horas_sueno || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`¿Consume alcohol? ${item.consume_alcohol || 'No contestado'}`, 10, y);
+                y += 5;
+                if (item.frecuencia_alcohol) {
+                    doc.text(`Frecuencia: ${item.frecuencia_alcohol}`, 10, y);
+                    y += 5;
+                }
+                doc.text(`¿Realiza ejercicio? ${item.ejercicio || 'No contestado'}`, 10, y);
+                y += 5;
+
+                doc.text("Modo Autoconcepto:", 10, y);
+                y += 5;
+                doc.text(`¿Sé quién soy? ${item.se_quien_soy || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`¿Cómo te sientes físicamente? ${item.sentimiento_fisico || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`¿Cómo te describes? ${item.descripcion_personal || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`Creencias espirituales: ${item.creencias?.join(", ") || 'No contestado'}`, 10, y);
+                y += 5;
+                if (item.creencias_otros) {
+                    doc.text(`Otros: ${item.creencias_otros}`, 10, y);
+                    y += 5;
+                }
+
+                doc.text("Modo Rol:", 10, y);
+                y += 5;
+                doc.text(`Roles: ${item.roles?.join(", ") || 'No contestado'}`, 10, y);
+                y += 5;
+                if (item.roles_otro) {
+                    doc.text(`Otro: ${item.roles_otro}`, 10, y);
+                    y += 5;
+                }
+                doc.text(`Afectación del rol de paciente: ${item.afectacion_rol || 'No contestado'}`, 10, y);
+                y += 5;
+
+                doc.text("Modo Interdependencia:", 10, y);
+                y += 5;
+                doc.text(`Seres significativos:`, 10, y);
+                y += 5;
+                doc.text(`1. ${item.significativos_1 || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`2. ${item.significativos_2 || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`3. ${item.significativos_3 || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`Red de apoyo: ${item.red_apoyo || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`Relación con estas personas: ${item.relacion_personas || 'No contestado'}`, 10, y);
+                y += 10;
+
+                if (y > 270) {
+                    doc.addPage();
+                    y = 10;
+                }
+            });
+
+            doc.save(`valoraciones_${categoryName.toLowerCase().replace(/ /g, "_")}.pdf`);
+        }
+    </script>
+</body>
+</html>
