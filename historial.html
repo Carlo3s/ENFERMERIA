@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Historial de Valoraciones</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
-     
-        
         .category-grid {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             gap: 30px;
+            margin-bottom: 20px;
         }
         .category {
             width: 120px;
@@ -36,6 +36,25 @@
             top: -60px;
             left: 40px;
         }
+        .valoracion {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 5px 0;
+            background-color: white;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 5px 0;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
         .historial-list {
             margin-top: 20px;
             text-align: left;
@@ -43,67 +62,63 @@
             max-width: 800px;
             margin: 20px auto;
         }
-        .historial-item {
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            background-color: white;
-        }
     </style>
 </head>
 <body>
-    <div class="header">
-        <img src="logo.png" alt="Logo" id="logo"> <!-- Reemplaza con el logo real -->
-        <span>VALORACIÓN DE ENFERMERÍA</span>
-    </div>
-    <div class="nav">
-        <a href="index.html">Inicio</a>
-        <a href="historial.html">Historial</a>
-        <a href="acerca.html">Acerca de</a>
-        <a href="contacto.html">Contacto</a>
-        <a href="Valoracion_preguntas.html">Entrevista</a>
-        <a href="ayuda.html">Recursos</a>
-        <button id="logout">Cerrar Sesión</button>
-    </div>
+    <nav>
+        <div class="logo">
+            <a href="index.html"><img src="logo.png" alt="Logo" id="logo"></a>
+        </div>
+        <ul>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="historial.html">Historial</a></li>
+            <li><a href="acerca.html">Acerca de</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+            <li><a href="Valoracion_preguntas.html">Entrevista</a></li>
+            <li><a href="ayuda.html">Recursos</a></li>
+            <li><button id="logout">Cerrar Sesión</button></li>
+        </ul>
+    </nav>
     
     <div class="container">
         <h2>Historial de Valoraciones</h2>
-        <div class="category-grid">
-            <div class="category" onclick="showHistorial('🔵 Por debajo del peso normal')">
-                <img src="https://via.placeholder.com/100?text=Carpeta" alt="Carpeta">
-                <div class="circle" style="background-color: #00f;"></div>
-                <p>Por debajo del peso normal</p>
+        <div id="historial">
+            <div class="category-grid">
+                <div class="category" onclick="showHistorial('🔵 Por debajo del peso normal')">
+                    <img src="carpeta.png" alt="Carpeta">
+                    <div class="circle" style="background-color: #00f;"></div>
+                    <p>Por debajo del peso normal</p>
+                </div>
+                <div class="category" onclick="showHistorial('🟢 Peso saludable')">
+                    <img src="carpeta.png" alt="Carpeta">
+                    <div class="circle" style="background-color: #0f0;"></div>
+                    <p>Peso saludable</p>
+                </div>
+                <div class="category" onclick="showHistorial('🟠 Sobrepeso')">
+                    <img src="carpeta.png" alt="Carpeta">
+                    <div class="circle" style="background-color: #ffa500;"></div>
+                    <p>Sobrepeso</p>
+                </div>
+                <div class="category" onclick="showHistorial('🔴 Obesidad I')">
+                    <img src="carpeta.png" alt="Carpeta">
+                    <div class="circle" style="background-color: #f00;"></div>
+                    <p>Obesidad I</p>
+                </div>
+                <div class="category" onclick="showHistorial('🟣 Obesidad II')">
+                    <img src="carpeta.png" alt="Carpeta">
+                    <div class="circle" style="background-color: #800080;"></div>
+                    <p>Obesidad II</p>
+                </div>
+                <div class="category" onclick="showHistorial('🟪 Obesidad III')">
+                    <img src="carpeta.png" alt="Carpeta">
+                    <div class="circle" style="background-color: #4b0082;"></div>
+                    <p>Obesidad III</p>
+                </div>
             </div>
-            <div class="category" onclick="showHistorial('🟢 Peso saludable')">
-                <img src="https://via.placeholder.com/100?text=Carpeta" alt="Carpeta">
-                <div class="circle" style="background-color: #0f0;"></div>
-                <p>Peso saludable</p>
+            <div class="historial-list" id="historial-list">
+                <h3 id="historial-title"></h3>
+                <div id="historial-items"></div>
             </div>
-            <div class="category" onclick="showHistorial('🟠 Sobrepeso')">
-                <img src="https://via.placeholder.com/100?text=Carpeta" alt="Carpeta">
-                <div class="circle" style="background-color: #ffa500;"></div>
-                <p>Sobrepeso</p>
-            </div>
-            <div class="category" onclick="showHistorial('🔴 Obesidad I')">
-                <img src="https://via.placeholder.com/100?text=Carpeta" alt="Carpeta">
-                <div class="circle" style="background-color: #f00;"></div>
-                <p>Obesidad I</p>
-            </div>
-            <div class="category" onclick="showHistorial('🟣 Obesidad II')">
-                <img src="https://via.placeholder.com/100?text=Carpeta" alt="Carpeta">
-                <div class="circle" style="background-color: #800080;"></div>
-                <p>Obesidad II</p>
-            </div>
-            <div class="category" onclick="showHistorial('🟪 Obesidad III')">
-                <img src="https://via.placeholder.com/100?text=Carpeta" alt="Carpeta">
-                <div class="circle" style="background-color: #4b0082;"></div>
-                <p>Obesidad III</p>
-            </div>
-        </div>
-        <div class="historial-list" id="historial-list">
-            <h3 id="historial-title"></h3>
-            <div id="historial-items"></div>
         </div>
     </div>
 
@@ -175,9 +190,16 @@
             if (items.length === 0) {
                 historialItems.innerHTML = "<p>No hay historiales disponibles para esta categoría.</p>";
             } else {
+                // Botón para descargar PDF de esta categoría
+                const downloadButton = document.createElement("button");
+                downloadButton.textContent = `Descargar PDF (${semaforo.split(" ").slice(1).join(" ")})`;
+                downloadButton.onclick = () => exportarPDF(items, semaforo.split(" ").slice(1).join(" "));
+                historialItems.appendChild(downloadButton);
+
+                // Mostrar las valoraciones de esta categoría
                 items.forEach((item, index) => {
                     const div = document.createElement("div");
-                    div.className = "historial-item";
+                    div.classList.add("valoracion");
                     div.innerHTML = `
                         <h4>Valoración ${index + 1}</h4>
                         <p><strong>Paciente:</strong> ${item.paciente}</p>
@@ -188,6 +210,173 @@
                     historialItems.appendChild(div);
                 });
             }
+        }
+
+        async function exportarPDF(items, categoryName) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            let y = 10;
+
+            doc.setFontSize(16);
+            doc.text(`Historial de Valoraciones - ${categoryName}`, 10, y);
+            y += 10;
+
+            items.forEach((item, index) => {
+                doc.setFontSize(12);
+                doc.text(`Valoración ${index + 1}`, 10, y);
+                y += 5;
+                doc.text(`Paciente: ${item.paciente}`, 10, y);
+                y += 5;
+                doc.text(`Resultado: ${item.semaforo}`, 10, y);
+                y += 5;
+                doc.text(`IMC: ${item.imc || 'No calculado'}`, 10, y);
+                y += 5;
+                doc.text(`PAM: ${item.pam || 'No calculado'} mmHg`, 10, y);
+                y += 5;
+
+                doc.text("Datos de Identificación:", 10, y);
+                y += 5;
+                doc.text(`Nombre: ${item.nombre}`, 10, y);
+                y += 5;
+                doc.text(`Edad: ${item.edad}`, 10, y);
+                y += 5;
+                doc.text(`Sexo: ${item.sexo}`, 10, y);
+                y += 5;
+                doc.text(`Peso: ${item.peso} kg`, 10, y);
+                y += 5;
+                doc.text(`Altura: ${item.altura} m`, 10, y);
+                y += 5;
+                doc.text(`Presión Sistólica: ${item.ps || 'No ingresado'} mmHg`, 10, y);
+                y += 5;
+                doc.text(`Presión Diastólica: ${item.pd || 'No ingresado'} mmHg`, 10, y);
+                y += 5;
+
+                doc.text("Modo Fisiológico:", 10, y);
+                y += 5;
+                doc.text("Necesidad de Oxigenación:", 10, y);
+                y += 5;
+                doc.text(`¿Ha tenido cambios en su respiración? ${item.cambios_respiracion || 'No contestado'}`, 10, y);
+                y += 5;
+                if (item.cambios_respiracion_detalle) {
+                    doc.text(`Especificar: ${item.cambios_respiracion_detalle}`, 10, y);
+                    y += 5;
+                }
+                doc.text(`Problemas respiratorios (6 meses): ${item.problemas_respiratorios || '0'}`, 10, y);
+                y += 5;
+                doc.text(`¿Toma medicamentos para problemas respiratorios? ${item.medicamentos_respiratorios || 'No contestado'}`, 10, y);
+                y += 5;
+                if (item.medicamentos_detalle) {
+                    doc.text(`Especificar: ${item.medicamentos_detalle}`, 10, y);
+                    y += 5;
+                }
+                doc.text(`¿Fuma? ${item.fuma || 'No contestado'}`, 10, y);
+                y += 5;
+                if (item.cigarrillos_dia) {
+                    doc.text(`Cigarrillos al día: ${item.cigarrillos_dia}`, 10, y);
+                    y += 5;
+                }
+                if (item.fuma_historia) {
+                    doc.text(`¿Ha consumido tabaco alguna vez? ${item.fuma_historia}`, 10, y);
+                    y += 5;
+                }
+                doc.text(`¿Humo o contaminantes en su ambiente? ${item.humo_ambiente || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`¿Familiares con problemas respiratorios? ${item.antecedentes_respiratorios || 'No contestado'}`, 10, y);
+                y += 5;
+                if (item.antecedentes_detalle) {
+                    doc.text(`Especificar: ${item.antecedentes_detalle}`, 10, y);
+                    y += 5;
+                }
+
+                doc.text("Necesidad de Nutrición:", 10, y);
+                y += 5;
+                doc.text(`Alimentos que consume: ${item.alimentos_hogar || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`¿Consume suplementos? ${item.suplementos || 'No contestado'}`, 10, y);
+                y += 5;
+                if (item.suplementos_detalle) {
+                    doc.text(`¿Cuáles? ${item.suplementos_detalle}`, 10, y);
+                    y += 5;
+                }
+                doc.text(`Comidas al día: ${item.comidas_dia || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`¿Problemas para comer? ${item.problemas_comer || 'No contestado'}`, 10, y);
+                y += 5;
+
+                doc.text("Necesidad de Eliminación:", 10, y);
+                y += 5;
+                doc.text(`Frecuencia de orina (24 hrs): ${item.frecuencia_orina || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`¿Cambio en patrón de orina? ${item.cambio_orina || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`Frecuencia de evacuación (24 hrs): ${item.frecuencia_evacuacion || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`¿Cambio en patrón de evacuación? ${item.cambio_evacuacion || 'No contestado'}`, 10, y);
+                y += 5;
+
+                doc.text("Necesidad de Actividad y Reposo:", 10, y);
+                y += 5;
+                doc.text(`Actividades diarias: ${item.actividades_diarias || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`Horas de sueño (24 hrs): ${item.horas_sueno || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`¿Consume alcohol? ${item.consume_alcohol || 'No contestado'}`, 10, y);
+                y += 5;
+                if (item.frecuencia_alcohol) {
+                    doc.text(`Frecuencia: ${item.frecuencia_alcohol}`, 10, y);
+                    y += 5;
+                }
+                doc.text(`¿Realiza ejercicio? ${item.ejercicio || 'No contestado'}`, 10, y);
+                y += 5;
+
+                doc.text("Modo Autoconcepto:", 10, y);
+                y += 5;
+                doc.text(`¿Sé quién soy? ${item.se_quien_soy || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`¿Cómo te sientes físicamente? ${item.sentimiento_fisico || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`¿Cómo te describes? ${item.descripcion_personal || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`Creencias espirituales: ${item.creencias?.join(", ") || 'No contestado'}`, 10, y);
+                y += 5;
+                if (item.creencias_otros) {
+                    doc.text(`Otros: ${item.creencias_otros}`, 10, y);
+                    y += 5;
+                }
+
+                doc.text("Modo Rol:", 10, y);
+                y += 5;
+                doc.text(`Roles: ${item.roles?.join(", ") || 'No contestado'}`, 10, y);
+                y += 5;
+                if (item.roles_otro) {
+                    doc.text(`Otro: ${item.roles_otro}`, 10, y);
+                    y += 5;
+                }
+                doc.text(`Afectación del rol de paciente: ${item.afectacion_rol || 'No contestado'}`, 10, y);
+                y += 5;
+
+                doc.text("Modo Interdependencia:", 10, y);
+                y += 5;
+                doc.text(`Seres significativos:`, 10, y);
+                y += 5;
+                doc.text(`1. ${item.significativos_1 || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`2. ${item.significativos_2 || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`3. ${item.significativos_3 || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`Red de apoyo: ${item.red_apoyo || 'No contestado'}`, 10, y);
+                y += 5;
+                doc.text(`Relación con estas personas: ${item.relacion_personas || 'No contestado'}`, 10, y);
+                y += 10;
+
+                if (y > 270) {
+                    doc.addPage();
+                    y = 10;
+                }
+            });
+
+            doc.save(`valoraciones_${categoryName.toLowerCase().replace(/ /g, "_")}.pdf`);
         }
     </script>
 </body>
