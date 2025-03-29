@@ -18,24 +18,26 @@
             width: 120px;
             text-align: center;
             cursor: pointer;
+            position: relative; /* Aseguramos que el contenedor sea relativo para posicionar el círculo */
         }
         .category img {
             width: 100px;
             height: 100px;
+            cursor: pointer; /* Aseguramos que la imagen tenga un cursor de puntero */
         }
         .category p {
             margin: 5px 0;
             font-size: 14px;
         }
         .category .circle {
-            width: 30px; /* Aumenté el tamaño para que coincida con la imagen */
+            width: 30px;
             height: 30px;
             border-radius: 50%;
             display: inline-block;
-            position: relative;
-            top: -70px; /* Ajusté la posición para que se alinee mejor con la carpeta */
-            left: 35px; /* Ajusté la posición horizontal */
-            border: 2px solid #000; /* Agregué un borde negro para que coincida con la imagen */
+            position: absolute; /* Cambié a absolute para posicionarlo respecto al contenedor */
+            top: 10px; /* Ajusté la posición para que se alinee con la imagen */
+            right: 10px; /* Ajusté la posición horizontal */
+            border: 2px solid #000;
         }
         .valoracion {
             border: 1px solid #ccc;
@@ -86,32 +88,32 @@
         <div id="historial">
             <div class="category-grid">
                 <div class="category" onclick="showHistorial('🔵 Por debajo del peso normal')">
-                    <img src="carpeta.png" alt="Carpeta">
+                    <img src="carpeta.png" alt="Carpeta" onclick="showHistorial('🔵 Por debajo del peso normal')">
                     <div class="circle" style="background-color: #00f;"></div>
                     <p>Por debajo del peso normal</p>
                 </div>
                 <div class="category" onclick="showHistorial('🟢 Peso saludable')">
-                    <img src="carpeta.png" alt="Carpeta">
+                    <img src="carpeta.png" alt="Carpeta" onclick="showHistorial('🟢 Peso saludable')">
                     <div class="circle" style="background-color: #0f0;"></div>
                     <p>Peso saludable</p>
                 </div>
                 <div class="category" onclick="showHistorial('🟠 Sobrepeso')">
-                    <img src="carpeta.png" alt="Carpeta">
+                    <img src="carpeta.png" alt="Carpeta" onclick="showHistorial('🟠 Sobrepeso')">
                     <div class="circle" style="background-color: #ffa500;"></div>
                     <p>Sobrepeso</p>
                 </div>
                 <div class="category" onclick="showHistorial('🔴 Obesidad I')">
-                    <img src="carpeta.png" alt="Carpeta">
+                    <img src="carpeta.png" alt="Carpeta" onclick="showHistorial('🔴 Obesidad I')">
                     <div class="circle" style="background-color: #f00;"></div>
                     <p>Obesidad I</p>
                 </div>
                 <div class="category" onclick="showHistorial('🟣 Obesidad II')">
-                    <img src="carpeta.png" alt="Carpeta">
+                    <img src="carpeta.png" alt="Carpeta" onclick="showHistorial('🟣 Obesidad II')">
                     <div class="circle" style="background-color: #800080;"></div>
                     <p>Obesidad II</p>
                 </div>
                 <div class="category" onclick="showHistorial('🟪 Obesidad III')">
-                    <img src="carpeta.png" alt="Carpeta">
+                    <img src="carpeta.png" alt="Carpeta" onclick="showHistorial('🟪 Obesidad III')">
                     <div class="circle" style="background-color: #4b0082;"></div>
                     <p>Obesidad III</p>
                 </div>
