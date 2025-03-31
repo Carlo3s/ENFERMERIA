@@ -11,14 +11,21 @@ nav {
     background-color: #007BFF;
     padding: 10px 20px;
     display: flex;
-    flex-wrap: wrap; /* Permite que los elementos se ajusten en pantallas pequeñas */
-    justify-content: space-between;
+    flex-direction: column; /* Apila el logo y los enlaces verticalmente */
     align-items: center;
+    text-align: center;
 }
 
-nav .logo img {
-    height: 40px;
-    max-width: 100%; /* Asegura que el logo no desborde */
+nav .logo {
+    margin-bottom: 10px;
+}
+
+nav .logo-text {
+    color: white;
+    font-size: 24px; /* Tamaño más pequeño pero visible */
+    font-weight: bold;
+    text-decoration: none;
+    text-transform: uppercase;
 }
 
 nav ul {
@@ -27,20 +34,23 @@ nav ul {
     gap: 15px;
     margin: 0;
     padding: 0;
-    flex-wrap: wrap; /* Permite que los elementos del menú se ajusten en pantallas pequeñas */
+    flex-wrap: wrap; /* Permite que los enlaces se ajusten en pantallas pequeñas */
 }
 
 nav ul li {
     margin: 5px 0;
 }
 
-nav ul li a {
+nav ul li a, nav ul li button {
     color: white;
     text-decoration: none;
     font-size: 16px;
+    background: none;
+    border: none;
+    cursor: pointer;
 }
 
-nav ul li a:hover {
+nav ul li a:hover, nav ul li button:hover {
     text-decoration: underline;
 }
 
@@ -50,7 +60,7 @@ nav ul li a:hover {
     margin: 20px auto;
     padding: 20px;
     text-align: center;
-    box-sizing: border-box; /* Asegura que el padding no desborde */
+    box-sizing: border-box;
 }
 
 .container h2 {
@@ -144,7 +154,7 @@ img {
 .main-layout {
     display: flex;
     gap: 20px;
-    flex-wrap: wrap; /* Permite que las columnas se apilen en pantallas pequeñas */
+    flex-wrap: wrap;
     border: 1px solid #ddd;
     border-radius: 8px;
     background-color: #fff;
@@ -154,7 +164,7 @@ img {
 
 .left-column, .center-column, .right-column {
     flex: 1;
-    min-width: 300px; /* Ancho mínimo para cada columna */
+    min-width: 300px;
     padding: 10px;
     box-sizing: border-box;
 }
@@ -215,7 +225,7 @@ section {
 
 .video-item iframe {
     border-radius: 8px;
-    width: 100%; /* Asegura que el iframe se ajuste al contenedor */
+    width: 100%;
     height: 200px;
 }
 
@@ -332,11 +342,15 @@ section {
     }
 
     .main-layout {
-        flex-direction: column; /* Apila las columnas en tablets */
+        flex-direction: column;
     }
 
     .left-column, .center-column, .right-column {
-        min-width: 100%; /* Ocupa todo el ancho */
+        min-width: 100%;
+    }
+
+    nav .logo-text {
+        font-size: 20px; /* Tamaño más pequeño en tablets */
     }
 }
 
@@ -351,12 +365,11 @@ section {
     }
 
     nav {
-        flex-direction: column; /* Apila el logo y el menú en móviles */
-        align-items: flex-start;
+        padding: 10px;
     }
 
-    nav .logo {
-        margin-bottom: 10px;
+    nav .logo-text {
+        font-size: 18px; /* Tamaño más pequeño pero visible en móviles */
     }
 
     nav ul {
@@ -370,14 +383,14 @@ section {
     }
 
     .main-layout {
-        flex-direction: column; /* Apila las columnas en móviles */
+        flex-direction: column;
     }
 
     .left-column, .center-column, .right-column {
-        min-width: 100%; /* Ocupa todo el ancho */
+        min-width: 100%;
     }
 
     .video-item iframe {
-        height: 150px; /* Reduce el tamaño del iframe en móviles */
+        height: 150px;
     }
 }
