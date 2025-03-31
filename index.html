@@ -13,11 +13,11 @@
         </div>
         <ul>
             <li><a href="index.html">Inicio</a></li>
-            <li><a href="historial.html">Historial</a></li>
-            <li><a href="acerca.html">Acerca de</a></li>
-            <li><a href="contacto.html">Contacto</a></li>
             <li><a href="Valoracion_preguntas.html">Entrevista</a></li>
+          <li><a href="historial.html">Historial</a></li>
             <li><a href="ayuda.html">Recursos</a></li>
+            <li><a href="acerca.html">Acerca de</a></li>
+           <li><a href="contacto.html">Contacto</a></li>
             <li><button id="logout" style="cursor:pointer; background:none; border:none; color:white; font-size:16px;">Cerrar Sesión</button></li>
         </ul>
     </nav>
@@ -26,61 +26,112 @@
         <h2>Bienvenido(a) a la Valoración en Enfermería</h2>
         <p>Utiliza el menú para navegar a la sección de entrevista, revisar tu historial o contactarnos.</p>
 
-        <!-- Sección: Tip del día -->
-        <section class="tip-dia">
-            <h3>Tip del día</h3>
-            <p>💧 Recuerda hidratarte cada 2 horas para mantener tu cuerpo en óptimas condiciones.</p>
-        </section>
+        <!-- Contenedor principal con diseño en columnas -->
+        <div class="main-layout">
+            <!-- Columna izquierda: Tips y Videos -->
+            <div class="left-column">
+                <!-- Sección: Tip del día -->
+                <section class="tip-dia">
+                    <h3>Tip del día</h3>
+                    <p>💧 Recuerda hidratarte cada 2 horas para mantener tu cuerpo en óptimas condiciones.</p>
+                </section>
 
-        <!-- Sección: Temas principales con videos -->
-        <section class="temas-principales">
-            <h3>Temas principales</h3>
-            <div class="tarjetas">
-                <div class="tarjeta">
-                    <h4>Cómo medir la presión arterial</h4>
-                    <p>Guía paso a paso para hacerlo en casa.</p>
-                    <!-- Video de YouTube incrustado -->
-                    <iframe width="100%" height="200" src="https://www.youtube.com/watch?v=dCjk5ebxEWY" title="Cómo medir la presión arterial" frameborder="0" allowfullscreen></iframe>
-                </div>
-                <div class="tarjeta">
-                    <h4>Cuidados básicos para heridas</h4>
-                    <p>Aprende a limpiar y proteger.</p>
-                    <!-- Video de YouTube incrustado -->
-                    <iframe width="100%" height="200" src="https://www.youtube.com/watch?v=eTc7Ocg20Lo" title="Cuidados de heridas" frameborder="0" allowfullscreen></iframe>
-                </div>
-                <div class="tarjeta">
-                    <h4>Primeros auxilios esenciales</h4>
-                    <p>Qué hacer en una emergencia.</p>
-                    <!-- Video de YouTube incrustado -->
-                    <iframe width="100%" height="200" src="https://www.youtube.com/watch?v=f6FAYzYPqrY" title="Primeros auxilios" frameborder="0" allowfullscreen></iframe>
-                </div>
+                <!-- Sección: Videos de YouTube -->
+                <section class="videos-youtube">
+                    <h3>Videos de YouTube en lista</h3>
+                    <div class="video-lista">
+                        <div class="video-item">
+                            <h4>Cómo medir la presión arterial</h4>
+                            <p>Guía paso a paso para hacerlo en casa.</p>
+                            <iframe width="100%" height="200" src="https://www.youtube.com/embed/dCjk5ebxEWY" title="Cómo medir la presión arterial" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-item">
+                            <h4>Cuidados básicos para heridas</h4>
+                            <p>Aprende a limpiar y proteger.</p>
+                            <iframe width="100%" height="200" src="https://www.youtube.com/embed/eTc7Ocg20Lo" title="Cuidados de heridas" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-item">
+                            <h4>Primeros auxilios esenciales</h4>
+                            <p>Qué hacer en una emergencia.</p>
+                            <iframe width="100%" height="200" src="https://www.youtube.com/embed/f6FAYzYPqrY" title="Primeros auxilios" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </section>
             </div>
-        </section>
 
-        <!-- Sección: Blog/Últimos artículos -->
-        <section class="blog">
-            <h3>Últimos artículos</h3>
-            <div class="articulos">
-                <div class="articulo">
-                    <img src="tensiometro.png" alt="Tensiómetro" class="articulo-img">
-                    <h4>Cómo medir la presión arterial correctamente en 5 pasos</h4>
-                    <p>Aprende a tomar tu presión arterial de manera precisa y sencilla.</p>
-                    <a href="https://www.mayoclinic.org/es/diseases-conditions/high-blood-pressure/multimedia/how-to-measure-blood-pressure/vid-20084748">Leer más</a>
-                </div>
-                <div class="articulo">
-                    <img src="vendajes.jpg" alt="Vendajes" class="articulo-img">
-                    <h4>Cuidados básicos para heridas: Evita infecciones</h4>
-                    <p>Consejos prácticos para limpiar y proteger heridas correctamente.</p>
-                    <a href="https://www.msdmanuals.com/es/professional/lesiones-y-envenenamientos/c%C3%B3mo-cuidar-heridas-y-laceraciones/c%C3%B3mo-limpiar-irrigar-desbridar-y-vendar-las-heridas">Leer más</a>
-                </div>
-                <div class="articulo">
-                    <img src="signos vitales.png" alt="Signos vitales" class="articulo-img">
-                    <h4>Signos vitales: Qué son y cómo interpretarlos</h4>
-                    <p>Entiende la importancia de los signos vitales y cómo monitorearlos.</p>
-                    <a href="https://medlineplus.gov/spanish/vitalsigns.html">Leer más</a>
-                </div>
+            <!-- Columna central: Motivo de la página y Blog -->
+            <div class="center-column">
+                <!-- Motivo de la página -->
+                <section class="motivo-pagina">
+                    <h3>Motivo de la página</h3>
+                    <p>En esta página de valoración de enfermería, te explicamos qué es la presión arterial, IMC, materiales o instrumentos que se ocupan para una valoración.</p>
+                </section>
+
+                <!-- Sección: Blog/Últimos artículos -->
+                <section class="blog">
+                    <h3>Últimos artículos</h3>
+                    <div class="articulos">
+                        <div class="articulo">
+                            <img src="tensiometro.png" alt="Tensiómetro" class="articulo-img">
+                            <h4>Cómo medir la presión arterial correctamente en 5 pasos</h4>
+                            <p>Aprende a tomar tu presión arterial de manera precisa y sencilla.</p>
+                            <a href="https://www.mayoclinic.org/es/diseases-conditions/high-blood-pressure/multimedia/how-to-measure-blood-pressure/vid-20084748">Leer más</a>
+                        </div>
+                        <div class="articulo">
+                            <img src="vendajes.jpg" alt="Vendajes" class="articulo-img">
+                            <h4>Cuidados básicos para heridas: Evita infecciones</h4>
+                            <p>Consejos prácticos para limpiar y proteger heridas correctamente.</p>
+                            <a href="https://www.msdmanuals.com/es/professional/lesiones-y-envenenamientos/c%C3%B3mo-cuidar-heridas-y-laceraciones/c%C3%B3mo-limpiar-irrigar-desbridar-y-vendar-las-heridas">Leer más</a>
+                        </div>
+                        <div class="articulo">
+                            <img src="signos vitales.png" alt="Signos vitales" class="articulo-img">
+                            <h4>Signos vitales: Qué son y cómo interpretarlos</h4>
+                            <p>Entiende la importancia de los signos vitales y cómo monitorearlos.</p>
+                            <a href="https://medlineplus.gov/spanish/vitalsigns.html">Leer más</a>
+                        </div>
+                    </div>
+                </section>
             </div>
-        </section>
+
+            <!-- Columna derecha: Noticias y Red social -->
+            <div class="right-column">
+                <!-- Sección: Noticias sobre enfermería -->
+                <section class="noticias">
+                    <h3>Noticias sobre enfermería</h3>
+                    <div class="noticia-item">
+                        <h4>Avances en cuidados intensivos</h4>
+                        <p>Últimas técnicas para mejorar la atención en UCI.</p>
+                        <a href="https://www.enfermeria21.com/noticias-de-enfermeria/">Leer más</a>
+                    </div>
+                    <div class="noticia-item">
+                        <h4>Nuevas tecnologías en enfermería</h4>
+                        <p>Dispositivos que están revolucionando el cuidado de pacientes.</p>
+                        <a href="https://www.enfermeria21.com/noticias-de-enfermeria/">Leer más</a>
+                    </div>
+                </section>
+
+                <!-- Sección: Red social de enfermería -->
+                <section class="red-social">
+                    <h3>Red social de enfermería</h3>
+                    <p>Síguenos en nuestras redes para más consejos y actualizaciones:</p>
+                    <div class="social-links">
+                        <a href="https://www.instagram.com" target="_blank"><img src="instagram-icon.png" alt="Instagram" class="social-icon"></a>
+                        <a href="https://www.facebook.com" target="_blank"><img src="facebook-icon.png" alt="Facebook" class="social-icon"></a>
+                        <a href="https://www.twitter.com" target="_blank"><img src="twitter-icon.png" alt="Twitter" class="social-icon"></a>
+                    </div>
+                </section>
+
+                <!-- Sección: Páginas de ayuda y más -->
+                <section class="paginas-ayuda">
+                    <h3>Páginas de ayuda y más</h3>
+                    <ul>
+                        <li><a href="https://www.who.int/es" target="_blank">Organización Mundial de la Salud (OMS)</a></li>
+                        <li><a href="https://www.redcross.org/" target="_blank">Cruz Roja</a></li>
+                        <li><a href="https://medlineplus.gov/spanish/" target="_blank">MedlinePlus</a></li>
+                    </ul>
+                </section>
+            </div>
+        </div>
     </div>
 
     <script type="module">

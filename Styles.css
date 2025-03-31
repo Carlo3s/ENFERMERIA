@@ -300,13 +300,80 @@ nav ul li a:hover {
     font-size: 16px;
     margin-bottom: 20px;
 }
+/* Estilo general */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+nav {
+    background-color: #007BFF;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav .logo img {
+    height: 40px;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    margin: 0;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+nav ul li a:hover {
+    text-decoration: underline;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.container h2 {
+    color: #333;
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.container p {
+    color: #666;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+/* Diseño en columnas */
+.main-layout {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.left-column, .center-column, .right-column {
+    flex: 1;
+    min-width: 300px;
+}
 
 /* Tip del día */
 .tip-dia {
     background-color: #e7f3ff;
     padding: 20px;
     border-radius: 8px;
-    margin: 20px 0;
+    margin-bottom: 20px;
     text-align: left;
 }
 
@@ -321,64 +388,80 @@ nav ul li a:hover {
     font-size: 16px;
 }
 
-/* Temas principales */
-.temas-principales h3 {
+/* Videos de YouTube */
+.videos-youtube h3 {
     color: #333;
-    font-size: 24px;
+    font-size: 20px;
     margin-bottom: 20px;
 }
 
-.tarjetas {
+.video-lista {
     display: flex;
+    flex-direction: column;
     gap: 20px;
-    justify-content: center;
-    flex-wrap: wrap;
 }
 
-.tarjeta {
+.video-item {
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    width: 300px;
     padding: 15px;
     text-align: center;
 }
 
-.tarjeta h4 {
+.video-item h4 {
     color: #007BFF;
     font-size: 18px;
     margin-bottom: 10px;
 }
 
-.tarjeta p {
+.video-item p {
     color: #666;
     font-size: 14px;
     margin-bottom: 15px;
 }
 
-.tarjeta iframe {
+.video-item iframe {
     border-radius: 8px;
+}
+
+/* Motivo de la página */
+.motivo-pagina {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.motivo-pagina h3 {
+    color: #333;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.motivo-pagina p {
+    color: #666;
+    font-size: 16px;
 }
 
 /* Blog/Últimos artículos */
 .blog h3 {
     color: #333;
-    font-size: 24px;
-    margin: 40px 0 20px;
+    font-size: 20px;
+    margin-bottom: 20px;
 }
 
 .articulos {
     display: flex;
+    flex-direction: column;
     gap: 20px;
-    justify-content: center;
-    flex-wrap: wrap;
 }
 
 .articulo {
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    width: 300px;
     padding: 15px;
     text-align: center;
 }
@@ -412,4 +495,93 @@ nav ul li a:hover {
 .articulo a:hover {
     text-decoration: underline;
 }
-    }
+
+/* Noticias sobre enfermería */
+.noticias h3 {
+    color: #333;
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.noticia-item {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.noticia-item h4 {
+    color: #007BFF;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.noticia-item p {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.noticia-item a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+.noticia-item a:hover {
+    text-decoration: underline;
+}
+
+/* Red social de enfermería */
+.red-social {
+    margin-bottom: 20px;
+}
+
+.red-social h3 {
+    color: #333;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.red-social p {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.social-links {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.social-icon {
+    width: 30px;
+    height: 30px;
+}
+
+/* Páginas de ayuda y más */
+.paginas-ayuda h3 {
+    color: #333;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.paginas-ayuda ul {
+    list-style: none;
+    padding: 0;
+}
+
+.paginas-ayuda ul li {
+    margin-bottom: 10px;
+}
+
+.paginas-ayuda ul li a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+.paginas-ayuda ul li a:hover {
+    text-decoration: underline;
+}
+}
