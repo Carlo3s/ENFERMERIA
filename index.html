@@ -33,7 +33,7 @@
                 <!-- Sección: Tip del día -->
                 <section class="tip-dia">
                     <h3>Tip del día</h3>
-                    <p>💧 Recuerda hidratarte cada 2 horas para mantener tu cuerpo en óptimas condiciones.</p>
+                    <p id="daily-tip">💧 Recuerda hidratarte cada 2 horas para mantener tu cuerpo en óptimas condiciones.</p>
                 </section>
 
                 <!-- Sección: Videos de YouTube -->
@@ -59,7 +59,7 @@
                 </section>
             </div>
 
-            <!-- Columna central: Motivo de la página y Blog -->
+            <!-- Columna central: Motivo de la página y Páginas de ayuda -->
             <div class="center-column">
                 <!-- Motivo de la página -->
                 <section class="motivo-pagina">
@@ -67,29 +67,14 @@
                     <p>En esta página de valoración de enfermería, te explicamos qué es la presión arterial, IMC, materiales o instrumentos que se ocupan para una valoración.</p>
                 </section>
 
-                <!-- Sección: Blog/Últimos artículos -->
-                <section class="blog">
-                    <h3>Últimos artículos</h3>
-                    <div class="articulos">
-                        <div class="articulo">
-                            <img src="tensiometro.png" alt="Tensiómetro" class="articulo-img">
-                            <h4>Cómo medir la presión arterial correctamente en 5 pasos</h4>
-                            <p>Aprende a tomar tu presión arterial de manera precisa y sencilla.</p>
-                            <a href="https://www.mayoclinic.org/es/diseases-conditions/high-blood-pressure/multimedia/how-to-measure-blood-pressure/vid-20084748">Leer más</a>
-                        </div>
-                        <div class="articulo">
-                            <img src="vendajes.jpg" alt="Vendajes" class="articulo-img">
-                            <h4>Cuidados básicos para heridas: Evita infecciones</h4>
-                            <p>Consejos prácticos para limpiar y proteger heridas correctamente.</p>
-                            <a href="https://www.msdmanuals.com/es/professional/lesiones-y-envenenamientos/c%C3%B3mo-cuidar-heridas-y-laceraciones/c%C3%B3mo-limpiar-irrigar-desbridar-y-vendar-las-heridas">Leer más</a>
-                        </div>
-                        <div class="articulo">
-                            <img src="signos vitales.png" alt="Signos vitales" class="articulo-img">
-                            <h4>Signos vitales: Qué son y cómo interpretarlos</h4>
-                            <p>Entiende la importancia de los signos vitales y cómo monitorearlos.</p>
-                            <a href="https://medlineplus.gov/spanish/vitalsigns.html">Leer más</a>
-                        </div>
-                    </div>
+                <!-- Sección: Páginas de ayuda y más -->
+                <section class="paginas-ayuda">
+                    <h3>Páginas de ayuda y más</h3>
+                    <ul>
+                        <li><a href="https://www.who.int/es" target="_blank">Organización Mundial de la Salud (OMS)</a></li>
+                        <li><a href="https://www.redcross.org/" target="_blank">Cruz Roja</a></li>
+                        <li><a href="https://medlineplus.gov/spanish/" target="_blank">MedlinePlus</a></li>
+                    </ul>
                 </section>
             </div>
 
@@ -98,15 +83,17 @@
                 <!-- Sección: Noticias sobre enfermería -->
                 <section class="noticias">
                     <h3>Noticias sobre enfermería</h3>
-                    <div class="noticia-item">
-                        <h4>Avances en cuidados intensivos</h4>
-                        <p>Últimas técnicas para mejorar la atención en UCI.</p>
-                        <a href="https://www.enfermeria21.com/noticias-de-enfermeria/">Leer más</a>
-                    </div>
-                    <div class="noticia-item">
-                        <h4>Nuevas tecnologías en enfermería</h4>
-                        <p>Dispositivos que están revolucionando el cuidado de pacientes.</p>
-                        <a href="https://www.enfermeria21.com/noticias-de-enfermeria/">Leer más</a>
+                    <div id="noticias-lista">
+                        <div class="noticia-item">
+                            <h4>Avances en cuidados intensivos</h4>
+                            <p>Últimas técnicas para mejorar la atención en UCI.</p>
+                            <a href="https://www.enfermeria21.com/noticias-de-enfermeria/">Leer más</a>
+                        </div>
+                        <div class="noticia-item">
+                            <h4>Nuevas tecnologías en enfermería</h4>
+                            <p>Dispositivos que están revolucionando el cuidado de pacientes.</p>
+                            <a href="https://www.enfermeria21.com/noticias-de-enfermeria/">Leer más</a>
+                        </div>
                     </div>
                 </section>
 
@@ -119,16 +106,6 @@
                         <a href="https://www.facebook.com" target="_blank"><img src="facebook-icon.png" alt="Facebook" class="social-icon"></a>
                         <a href="https://www.twitter.com" target="_blank"><img src="twitter-icon.png" alt="Twitter" class="social-icon"></a>
                     </div>
-                </section>
-
-                <!-- Sección: Páginas de ayuda y más -->
-                <section class="paginas-ayuda">
-                    <h3>Páginas de ayuda y más</h3>
-                    <ul>
-                        <li><a href="https://www.who.int/es" target="_blank">Organización Mundial de la Salud (OMS)</a></li>
-                        <li><a href="https://www.redcross.org/" target="_blank">Cruz Roja</a></li>
-                        <li><a href="https://medlineplus.gov/spanish/" target="_blank">MedlinePlus</a></li>
-                    </ul>
                 </section>
             </div>
         </div>
@@ -164,6 +141,42 @@
                 console.error("Error al cerrar sesión: ", error);
             });
         });
+
+        // Script para rotar los "Tips del día"
+        const tips = [
+            "💧 Recuerda hidratarte cada 2 horas para mantener tu cuerpo en óptimas condiciones.",
+            "🩺 Revisa tu presión arterial al menos una vez al mes.",
+            "🧼 Lava tus manos frecuentemente para prevenir infecciones.",
+            "🛌 Descansa al menos 7-8 horas diarias para una buena salud.",
+            "🍎 Incluye frutas y verduras en tu dieta diaria."
+        ];
+
+        const today = new Date().getDay(); // Obtiene el día de la semana (0-6)
+        document.getElementById("daily-tip").textContent = tips[today % tips.length];
+
+        // Script para cargar noticias con NewsAPI
+fetch('https://newsapi.org/v2/everything?q=enfermería&language=es&apiKey=c35e3e5984c34acabe6a3f06893cda42')
+    .then(response => response.json())
+    .then(data => {
+        const noticiasLista = document.getElementById('noticias-lista');
+        noticiasLista.innerHTML = ''; // Limpia las noticias estáticas
+        const articles = data.articles.slice(0, 3); // Limita a 3 noticias
+        articles.forEach(article => {
+            const noticiaDiv = document.createElement('div');
+            noticiaDiv.classList.add('noticia-item');
+            noticiaDiv.innerHTML = `
+                <h4>${article.title}</h4>
+                <p>${article.description || 'Sin descripción disponible.'}</p>
+                <a href="${article.url}" target="_blank">Leer más</a>
+            `;
+            noticiasLista.appendChild(noticiaDiv);
+        });
+    })
+    .catch(error => {
+        console.error('Error al cargar noticias:', error);
+        document.getElementById('noticias-lista').innerHTML = '<p>No se pudieron cargar las noticias.</p>';
+    });
     </script>
+    
 </body>
 </html>
