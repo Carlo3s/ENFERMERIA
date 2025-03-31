@@ -14,10 +14,10 @@
         <ul>
             <li><a href="index.html">Inicio</a></li>
             <li><a href="Valoracion_preguntas.html">Entrevista</a></li>
-          <li><a href="historial.html">Historial</a></li>
+            <li><a href="historial.html">Historial</a></li>
             <li><a href="ayuda.html">Recursos</a></li>
             <li><a href="acerca.html">Acerca de</a></li>
-           <li><a href="contacto.html">Contacto</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
             <li><button id="logout" style="cursor:pointer; background:none; border:none; color:white; font-size:16px;">Cerrar Sesión</button></li>
         </ul>
     </nav>
@@ -155,28 +155,27 @@
         document.getElementById("daily-tip").textContent = tips[today % tips.length];
 
         // Script para cargar noticias con NewsAPI
-fetch('https://newsapi.org/v2/everything?q=enfermería&language=es&apiKey=c35e3e5984c34acabe6a3f06893cda42')
-    .then(response => response.json())
-    .then(data => {
-        const noticiasLista = document.getElementById('noticias-lista');
-        noticiasLista.innerHTML = ''; // Limpia las noticias estáticas
-        const articles = data.articles.slice(0, 3); // Limita a 3 noticias
-        articles.forEach(article => {
-            const noticiaDiv = document.createElement('div');
-            noticiaDiv.classList.add('noticia-item');
-            noticiaDiv.innerHTML = `
-                <h4>${article.title}</h4>
-                <p>${article.description || 'Sin descripción disponible.'}</p>
-                <a href="${article.url}" target="_blank">Leer más</a>
-            `;
-            noticiasLista.appendChild(noticiaDiv);
-        });
-    })
-    .catch(error => {
-        console.error('Error al cargar noticias:', error);
-        document.getElementById('noticias-lista').innerHTML = '<p>No se pudieron cargar las noticias.</p>';
-    });
+        fetch('https://newsapi.org/v2/everything?q=enfermería&language=es&apiKey=c35e3e5984c34acabe6a3f06893cda42')
+            .then(response => response.json())
+            .then(data => {
+                const noticiasLista = document.getElementById('noticias-lista');
+                noticiasLista.innerHTML = ''; // Limpia las noticias estáticas
+                const articles = data.articles.slice(0, 3); // Limita a 3 noticias
+                articles.forEach(article => {
+                    const noticiaDiv = document.createElement('div');
+                    noticiaDiv.classList.add('noticia-item');
+                    noticiaDiv.innerHTML = `
+                        <h4>${article.title}</h4>
+                        <p>${article.description || 'Sin descripción disponible.'}</p>
+                        <a href="${article.url}" target="_blank">Leer más</a>
+                    `;
+                    noticiasLista.appendChild(noticiaDiv);
+                });
+            })
+            .catch(error => {
+                console.error('Error al cargar noticias:', error);
+                document.getElementById('noticias-lista').innerHTML = '<p>No se pudieron cargar las noticias.</p>';
+            });
     </script>
-    
 </body>
 </html>
