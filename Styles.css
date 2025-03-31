@@ -11,7 +11,7 @@ nav {
     background-color: #007BFF;
     padding: 10px 20px;
     display: flex;
-    flex-direction: column; /* Apila el logo y los enlaces verticalmente */
+    flex-direction: column;
     align-items: center;
     text-align: center;
 }
@@ -22,7 +22,7 @@ nav .logo {
 
 nav .logo-text {
     color: white;
-    font-size: 24px; /* Tamaño más pequeño pero visible */
+    font-size: 24px;
     font-weight: bold;
     text-decoration: none;
     text-transform: uppercase;
@@ -34,7 +34,7 @@ nav ul {
     gap: 15px;
     margin: 0;
     padding: 0;
-    flex-wrap: wrap; /* Permite que los enlaces se ajusten en pantallas pequeñas */
+    flex-wrap: wrap;
 }
 
 nav ul li {
@@ -302,6 +302,15 @@ section {
     text-decoration: underline;
 }
 
+/* Estilo para el mensaje de error */
+.error-message {
+    color: #d9534f; /* Rojo para el mensaje de error */
+    font-size: 14px;
+    font-style: italic;
+    margin-top: 10px;
+    text-align: center;
+}
+
 /* Red social de enfermería */
 .red-social h3 {
     color: #333;
@@ -350,7 +359,7 @@ section {
     }
 
     nav .logo-text {
-        font-size: 20px; /* Tamaño más pequeño en tablets */
+        font-size: 20px;
     }
 }
 
@@ -369,7 +378,7 @@ section {
     }
 
     nav .logo-text {
-        font-size: 18px; /* Tamaño más pequeño pero visible en móviles */
+        font-size: 18px;
     }
 
     nav ul {

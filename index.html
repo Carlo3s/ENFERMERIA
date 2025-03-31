@@ -84,6 +84,7 @@
                 <section class="noticias">
                     <h3>Noticias sobre enfermería</h3>
                     <div id="noticias-lista">
+                        <!-- Noticias estáticas como respaldo -->
                         <div class="noticia-item">
                             <h4>Avances en cuidados intensivos</h4>
                             <p>Últimas técnicas para mejorar la atención en UCI.</p>
@@ -156,10 +157,18 @@
 
         // Script para cargar noticias con NewsAPI
         fetch('https://newsapi.org/v2/everything?q=enfermería&language=es&apiKey=c35e3e5984c34acabe6a3f06893cda42')
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error en la solicitud: ' + response.statusText);
+                }
+                return response.json();
+            })
             .then(data => {
+                if (data.status === "error") {
+                    throw new Error(data.message);
+                }
                 const noticiasLista = document.getElementById('noticias-lista');
-                noticiasLista.innerHTML = ''; // Limpia las noticias estáticas
+                noticiasLista.innerHTML = ''; // Limpia las noticias estáticas solo si la solicitud es exitosa
                 const articles = data.articles.slice(0, 3); // Limita a 3 noticias
                 articles.forEach(article => {
                     const noticiaDiv = document.createElement('div');
@@ -174,7 +183,21 @@
             })
             .catch(error => {
                 console.error('Error al cargar noticias:', error);
-                document.getElementById('noticias-lista').innerHTML = '<p>No se pudieron cargar las noticias.</p>';
+                const noticiasLista = document.getElementById('noticias-lista');
+                // Mantener las noticias estáticas como respaldo
+                noticiasLista.innerHTML = `
+                    <div class="noticia-item">
+                        <h4>Avances en cuidados intensivos</h4>
+                        <p>Últimas técnicas para mejorar la atención en UCI.</p>
+                        <a href="https://www.enfermeria21.com/noticias-de-enfermeria/">Leer más</a>
+                    </div>
+                    <div class="noticia-item">
+                        <h4>Nuevas tecnologías en enfermería</h4>
+                        <p>Dispositivos que están revolucionando el cuidado de pacientes.</p>
+                        <a href="https://www.enfermeria21.com/noticias-de-enfermeria/">Leer más</a>
+                    </div>
+                    <p class="error-message">No se pudieron cargar las noticias: ${error.message}</p>
+                `;
             });
     </script>
 </body>
