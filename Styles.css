@@ -402,4 +402,93 @@ section {
     .video-item iframe {
         height: 150px;
     }
+    /* Ensure the nav container is centered and structured */
+nav {
+    background-color: #007BFF;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+/* Center the logo and text */
+nav .logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+nav .logo img {
+    max-width: 50px; /* Adjust size as needed */
+    height: auto;
+}
+
+nav .logo-text {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+/* Center the menu items */
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center; /* Center the menu items horizontally */
+    gap: 15px;
+    margin: 0;
+    padding: 0;
+    flex-wrap: wrap;
+}
+
+nav ul li {
+    margin: 5px 0;
+}
+
+nav ul li a, nav ul li button {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+nav ul li a:hover, nav ul li button:hover {
+    text-decoration: underline;
+}
+
+/* Style the logout button container for index.html */
+nav .logout {
+    margin-top: 10px; /* Space between menu and logout button */
+}
+
+/* Style the logout button */
+nav .logout button {
+    color: white;
+    font-size: 16px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+nav .logout button:hover {
+    text-decoration: underline;
+}
+
+/* Ensure other pages with logout inside <ul> are unaffected */
+nav ul li button#logout {
+    color: white;
+    font-size: 16px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+nav ul li button#logout:hover {
+    text-decoration: underline;
+}
 }
