@@ -16,17 +16,6 @@ nav {
     text-align: center;
 }
 
-nav .logo {
-    margin-bottom: 5px;
-}
-
-nav .logo-text {
-    color: white;
-    font-size: 24px;
-    font-weight: bold;
-    text-decoration: none;
-    text-transform: uppercase;
-}
 
 nav ul {
     list-style: none;
