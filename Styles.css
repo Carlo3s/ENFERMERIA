@@ -421,13 +421,13 @@ nav .logo {
 }
 
 nav .logo img {
-    max-width: 50px; /* Adjust size as needed */
+    max-width: 25px; /* Adjust size as needed */
     height: auto;
 }
 
 nav .logo-text {
     color: white;
-    font-size: 24px;
+    font-size: 30px;
     font-weight: bold;
     text-decoration: none;
     text-transform: uppercase;
