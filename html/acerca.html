@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acerca de la Valoración</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<div class="logo">
+            
+</div>
+<nav>
+
+    <a href="index.html"><img src="logo.png" alt="Logo" id="logo"></a>
+<ul>
+    <li><a href="index.html">Inicio</a></li>
+    <li><a href="Valoracion_preguntas.html">Entrevista</a></li>
+    <li><a href="historial.html">Historial</a></li>
+    <li><a href="ayuda.html">Recursos</a></li>
+    <li><a href="acerca.html">Acerca de</a></li>
+    <li><a href="contacto.html">Contacto</a></li>
+</ul>
+<div class="logout">
+    <button id="logout">Cerrar Sesión</button>
+</div>
+</nav>
+
+
+<body>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyC2_Bftp6pPmQT41MyYMSc6PiYxEAkz9hs",
+            authDomain: "valoracion-enfermeria.firebaseapp.com",
+            projectId: "valoracion-enfermeria",
+            storageBucket: "valoracion-enfermeria.appspot.com",
+            messagingSenderId: "368639381830",
+            appId: "1:368639381830:web:253168bfdc4031a9c95547",
+            measurementId: "G-YNKHWHMKGB"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = "login.html";
+            }
+        });
+
+        document.getElementById("logout").addEventListener("click", () => {
+            signOut(auth).then(() => {
+                window.location.href = "login.html";
+            }).catch((error) => {
+                console.error("Error al cerrar sesión: ", error);
+            });
+        });
+    </script>
+    
+
+    
+    <div class="container">
+        <h2>Acerca de la Valoración en Enfermería</h2>
+        <p>La valoración en enfermería es un proceso fundamental para evaluar el estado de salud de un paciente. A través de la recopilación de datos, los profesionales pueden identificar problemas y planificar cuidados adecuados.</p>
+        <p>Los sistemas evaluados incluyen:</p>
+        <ul>
+            <li><strong>Neurológico:</strong> Nivel de consciencia y orientación.</li>
+            <li><strong>Respiratorio:</strong> Saturación de oxígeno y patrón respiratorio.</li>
+            <li><strong>Cardiovascular:</strong> Presión arterial y pulso.</li>
+            <li><strong>Gastrointestinal:</strong> Hábitos alimenticios y evacuaciones.</li>
+            <li><strong>Genitourinario:</strong> Frecuencia urinaria y molestias.</li>
+            <li><strong>Músculo-esquelético:</strong> Movilidad y fuerza.</li>
+            <li><strong>Piel y mucosas:</strong> Integridad, heridas y coloración.</li>
+        </ul>
+    </div>
+</body>
+</html>

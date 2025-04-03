@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valoración en Enfermería</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="logo">
+            
+        </div>
+    <nav>
+        
+            <a href="index.html"><img src="img/logo.png" alt="Logo" id="logo"></a>
+        <ul>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="Valoracion_preguntas.html">Entrevista</a></li>
+            <li><a href="historial.html">Historial</a></li>
+            <li><a href="ayuda.html">Recursos</a></li>
+            <li><a href="acerca.html">Acerca de</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+        <div class="logout">
+            <button id="logout">Cerrar Sesión</button>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <h2>Bienvenido(a) a la Valoración en Enfermería</h2>
+        <p>Utiliza el menú para navegar a la sección de entrevista, revisar tu historial o contactarnos.</p>
+
+        <!-- Contenedor principal con diseño en columnas -->
+        <div class="main-layout">
+            <!-- Columna izquierda: Tips y Videos -->
+            <div class="left-column">
+                <!-- Sección: Tip del día -->
+                <section class="tip-dia">
+                    <h3>Tip del día</h3>
+                    <p id="daily-tip">💧 Recuerda hidratarte cada 2 horas para mantener tu cuerpo en óptimas condiciones.</p>
+                </section>
+
+                <!-- Sección: Videos de YouTube -->
+                <section class="videos-youtube">
+                    <h3>Videos de YouTube en lista</h3>
+                    <div class="video-lista">
+                        <div class="video-item">
+                            <h4>Cómo medir la presión arterial</h4>
+                            <p>Guía paso a paso para hacerlo en casa.</p>
+                            <iframe width="100%" height="200" src="https://www.youtube.com/embed/dCjk5ebxEWY" title="Cómo medir la presión arterial" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-item">
+                            <h4>Cuidados básicos para heridas</h4>
+                            <p>Aprende a limpiar y proteger.</p>
+                            <iframe width="100%" height="200" src="https://www.youtube.com/embed/eTc7Ocg20Lo" title="Cuidados de heridas" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-item">
+                            <h4>Primeros auxilios esenciales</h4>
+                            <p>Qué hacer en una emergencia.</p>
+                            <iframe width="100%" height="200" src="https://www.youtube.com/embed/f6FAYzYPqrY" title="Primeros auxilios" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Columna central: Motivo de la página y Páginas de ayuda -->
+            <div class="center-column">
+                <!-- Motivo de la página -->
+                <section class="motivo-pagina">
+                    <h3>Motivo de la página</h3>
+                    <p>En esta página de valoración de enfermería, te explicamos qué es la presión arterial, IMC, materiales o instrumentos que se ocupan para una valoración.</p>
+                </section>
+
+                <!-- Sección: Páginas de ayuda y más -->
+                <section class="paginas-ayuda">
+                    <h3>Páginas de ayuda y más</h3>
+                    <ul>
+                        <li><a href="https://www.who.int/es" target="_blank">Organización Mundial de la Salud (OMS)</a></li>
+                        <li><a href="https://www.redcross.org/" target="_blank">Cruz Roja</a></li>
+                        <li><a href="https://medlineplus.gov/spanish/" target="_blank">MedlinePlus</a></li>
+                    </ul>
+                </section>
+            </div>
+
+            <!-- Columna derecha: Noticias y Red social -->
+            <div class="right-column">
+                <!-- Sección: Noticias sobre enfermería -->
+                <section class="noticias">
+                    <h3>Noticias sobre enfermería</h3>
+                    <div id="noticias-lista">
+                        <!-- Noticias estáticas como respaldo -->
+                        <div class="noticia-item">
+                            <h4>Avances en cuidados intensivos</h4>
+                            <p>Últimas técnicas para mejorar la atención en UCI.</p>
+                            <a href="https://www.enfermeria21.com/noticias-de-enfermeria/">Leer más</a>
+                        </div>
+                        <div class="noticia-item">
+                            <h4>Nuevas tecnologías en enfermería</h4>
+                            <p>Dispositivos que están revolucionando el cuidado de pacientes.</p>
+                            <a href="https://www.enfermeria21.com/noticias-de-enfermeria/">Leer más</a>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Sección: Red social de enfermería -->
+                <section class="red-social">
+                    <h3>Red social de enfermería</h3>
+                    <p>Síguenos en nuestras redes para más consejos y actualizaciones:</p>
+                    <div class="social-links">
+                        <a href="https://www.instagram.com" target="_blank"><img src="img/insta.png" alt="Instagram" class="social-icon"></a>
+                        <a href="https://www.facebook.com" target="_blank"><img src="img/facebook.png" alt="Facebook" class="social-icon"></a>
+                        <a href="https://www.twitter.com" target="_blank"><img src="img/twitter-icon.png" alt="Twitter" class="social-icon"></a>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyC2_Bftp6pPmQT41MyYMSc6PiYxEAkz9hs",
+            authDomain: "valoracion-enfermeria.firebaseapp.com",
+            projectId: "valoracion-enfermeria",
+            storageBucket: "valoracion-enfermeria.appspot.com",
+            messagingSenderId: "368639381830",
+            appId: "1:368639381830:web:253168bfdc4031a9c95547",
+            measurementId: "G-YNKHWHMKGB"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = "login.html";
+            }
+        });
+
+        document.getElementById("logout").addEventListener("click", () => {
+            signOut(auth).then(() => {
+                window.location.href = "login.html";
+            }).catch((error) => {
+                console.error("Error al cerrar sesión: ", error);
+            });
+        });
+
+        // Script para rotar los "Tips del día"
+        const tips = [
+            "💧 Recuerda hidratarte cada 2 horas para mantener tu cuerpo en óptimas condiciones.",
+            "🩺 Revisa tu presión arterial al menos una vez al mes.",
+            "🧼 Lava tus manos frecuentemente para prevenir infecciones.",
+            "🛌 Descansa al menos 7-8 horas diarias para una buena salud.",
+            "🍎 Incluye frutas y verduras en tu dieta diaria."
+        ];
+
+        const today = new Date().getDay(); // Obtiene el día de la semana (0-6)
+        document.getElementById("daily-tip").textContent = tips[today % tips.length];
+
+        // Script para cargar noticias con NewsAPI
+        fetch('https://newsapi.org/v2/everything?q=enfermería&language=es&apiKey=c35e3e5984c34acabe6a3f06893cda42')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error en la solicitud: ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.status === "error") {
+                    throw new Error(data.message);
+                }
+                const noticiasLista = document.getElementById('noticias-lista');
+                noticiasLista.innerHTML = ''; // Limpia las noticias estáticas solo si la solicitud es exitosa
+                const articles = data.articles.slice(0, 3); // Limita a 3 noticias
+                articles.forEach(article => {
+                    const noticiaDiv = document.createElement('div');
+                    noticiaDiv.classList.add('noticia-item');
+                    noticiaDiv.innerHTML = `
+                        <h4>${article.title}</h4>
+                        <p>${article.description || 'Sin descripción disponible.'}</p>
+                        <a href="${article.url}" target="_blank">Leer más</a>
+                    `;
+                    noticiasLista.appendChild(noticiaDiv);
+                });
+            })
+            .catch(error => {
+                console.error('Error al cargar noticias:', error);
+                const noticiasLista = document.getElementById('noticias-lista');
+                // Mantener las noticias estáticas como respaldo
+                noticiasLista.innerHTML = `
+                    <div class="noticia-item">
+                        <h4>Avances en cuidados intensivos</h4>
+                        <p>Últimas técnicas para mejorar la atención en UCI.</p>
+                        <a href="https://www.enfermeria21.com/noticias-de-enfermeria/">Leer más</a>
+                    </div>
+                    <div class="noticia-item">
+                        <h4>Nuevas tecnologías en enfermería</h4>
+                        <p>Dispositivos que están revolucionando el cuidado de pacientes.</p>
+                        <a href="https://www.enfermeria21.com/noticias-de-enfermeria/">Leer más</a>
+                    </div>
+                    <p class="error-message">No se pudieron cargar las noticias: ${error.message}</p>
+                `;
+            });
+    </script>
+</body>
+</html>
